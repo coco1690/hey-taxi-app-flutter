@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hey_taxi_app/src/domain/models/user.dart';
 
@@ -79,12 +80,12 @@ Widget _cardInfoUser( BuildContext context, User? user, ){
                 aspectRatio: 1,
                 child: ClipOval(
                   child: (user != null && user.image != null && user.image!.isNotEmpty)
-                  ? FadeInImage.assetNetwork(
-                   image: user.image!,
-                   placeholder: 'assets/img/user_image.png', 
-                   fit: BoxFit.cover,
-                   fadeInDuration: const Duration(seconds: 1),   
-                )  
+                  ? CachedNetworkImage(
+                    imageUrl: user.image!,
+                    placeholder: (context, url) => Image.asset('assets/img/user_image.png'),
+                    errorWidget: (context, url, error) => Image.asset('assets/img/user_image.png'),
+                    fit: BoxFit.cover,
+                  )
                   : Image.asset(
                       'assets/img/user_image.png',
                       fit: BoxFit.cover,

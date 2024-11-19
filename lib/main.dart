@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hey_taxi_app/bloc_providers.dart';
 import 'package:hey_taxi_app/injection.dart';
+import 'src/presentation/pages/client/mapSeeker/client_selection_map_page.dart';
 import 'src/presentation/pages/index.dart';
 
 
@@ -33,10 +34,11 @@ class MyApp extends StatelessWidget {
         initialRoute: 'login',
         
         routes: {
-          'login':          (BuildContext context) => const LoginPage(),
-          'register':       (BuildContext context) => const RegisterPage(),
-          'client/home':    (BuildContext context) => const ClientHomePage(),
-          'profile/update': (BuildContext context) => const ProfileUpdatePage()
+          'login':                (BuildContext context) => const LoginPage(),
+          'register':             (BuildContext context) => const RegisterPage(),
+          'client/home':          (BuildContext context) => const ClientHomePage(),
+          'profile/update':       (BuildContext context) => const ProfileUpdatePage(),
+          'client/selectionmap':  (BuildContext context) => const ClientSelectionMapPage(),
         },
       ),
     );
