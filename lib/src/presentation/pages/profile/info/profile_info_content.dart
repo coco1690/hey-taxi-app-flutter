@@ -53,8 +53,8 @@ Widget _headerProfile(BuildContext context){
           alignment: Alignment.topCenter,
           height: MediaQuery.of(context).size.height * 0.3,
           width:  MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: Colors.blueGrey.shade900,
+          decoration:const BoxDecoration(
+            color: Color.fromARGB(255, 243, 159, 90,)
          ),
           child: const Text('PERFIL DE USUARIO', style: TextStyle( color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
         ),
@@ -68,7 +68,7 @@ Widget _cardInfoUser( BuildContext context, User? user, ){
     width: MediaQuery.of(context).size.width,
     height: 260,
     child: Card(
-      color: Colors.blueGrey[800],
+      color:const Color.fromARGB(255, 56,	67,	88),
       child: Column(
         children: [
           Container(

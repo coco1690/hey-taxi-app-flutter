@@ -71,23 +71,7 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
     print('Desde el clientmapseekerbloc: ${position.latitude}, ${position.longitude}');
   });
 
-  //  on<ChangeMapCameraPosition>((event, emit) async {
-  //     try {
-  //       GoogleMapController googleMapController = await state.controller!.future;
-  //       await googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-  //         CameraPosition(
-  //           target: LatLng(event.lat, event.lng),
-  //           zoom: 14,
-  //           bearing: 0
-  //         )
-  //       ));
-  //     } catch (e) {
-  //       print('ERROR EN ChangeMapCameraPosition: $e');
-  //     }
-      
-  //   });  
-
-  on<ChangeMapCameraPosition>((event, emit) async {
+   on<ChangeMapCameraPosition>((event, emit) async {
   try {
     GoogleMapController googleMapController = await state.controller!.future;
     final newCameraPosition = CameraPosition(
@@ -101,15 +85,39 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
     print('ERROR EN ChangeMapCameraPosition: $e');
   }
 });
-   
+
+   on<ChangeMapCameraPositionDestination>((event, emit) async {
+  try {
+    GoogleMapController googleMapControllerDestination = await state.controller!.future;
+    final newCameraPosition = CameraPosition(
+      target: LatLng(event.lat, event.lng),
+      zoom: 14,
+      bearing: 0,
+    );
+    await googleMapControllerDestination.animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
+    emit(state.copyWith(cameraPosition: newCameraPosition));
+  } catch (e) {
+    print('ERROR EN ChangeMapCameraPositionDestination: $e');
+  }
+});
+
    on<OnCameraMove>((event, emit) async {
      emit(state.copyWith(cameraPosition: event.cameraPosition));
    });
 
-  //  on<OnCameraIdle>((event, emit) async {
-  //    PlacemarkData placemarkData = await geolocatorUseCases.getPlacemarkData.run(state.cameraPosition);
-  //    emit(state.copyWith(placemarkData: placemarkData));
-  //  });
+   on<OnCameraMoveDestination>((event, emit) async {
+     emit(state.copyWith(cameraPosition: event.cameraPosition));
+   });
+
+
+   on<OnCameraIdleDestination>((event, emit) async {
+     PlacemarkData placemarkData = await geolocatorUseCases.getPlacemarkData.run(state.cameraPosition);
+     emit(state.copyWith(
+      placemarkData: placemarkData,
+      // destinationLatLng: LatLng(event.lat, event.lng),
+      // destinationDescription: event.destinationDescription,
+    ));
+   });
 
    on<OnCameraIdle>((event, emit) async {
   try {
@@ -119,6 +127,22 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
     print('ERROR EN OnCameraIdle: $e');
   }
 });
+
+   on<OnGoogleAutocompletepickUpSelected>((event, emit) async {
+    emit(state.copyWith(
+      pickUpPLatLng: LatLng(event.lat, event.lng),
+      pickUpDescription: event.pickUpDescription
+      ));
+  });
+
+   on<OnGoogleAutocompleteDestinationSelected>((event, emit) async {
+    emit(state.copyWith(
+      destinationLatLng: LatLng(event.lat, event.lng),
+      destinationDescription: event.destinationDescription
+      ));
+  });
+
+
   }
  
 }

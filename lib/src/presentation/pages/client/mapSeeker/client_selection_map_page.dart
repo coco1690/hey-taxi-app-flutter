@@ -14,15 +14,7 @@ class ClientSelectionMapPage extends StatefulWidget {
 }
 
 class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
-  // final Completer<GoogleMapController> _controller =
-  //     Completer<GoogleMapController>();
-
-  // static const CameraPosition _kGooglePlex = CameraPosition(
-  //   target: LatLng(4.144223, -73.606649),
-  //   zoom: 14.4746,
-  // );
-
-  TextEditingController pickUpController = TextEditingController();
+ 
   TextEditingController destinationController = TextEditingController();
 
   @override
@@ -46,20 +38,27 @@ class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
               BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
                 listener: (context, state) {
                   if (state.placemarkData != null) {
-                    pickUpController.text = state.placemarkData!.address;
+                    destinationController.text = state.placemarkData!.address;
+                      context.read<ClientMapSeekerBloc>().add(OnGoogleAutocompleteDestinationSelected(
+                      lat: state.placemarkData!.lat,
+                      lng: state.placemarkData!.lng, 
+                      destinationDescription: state.placemarkData!.address,
+                    ));
                 }
               },  
                
                 child: GoogleMap(
                   mapType: MapType.normal,
                   initialCameraPosition: state.cameraPosition,
+
                   onCameraMove: (CameraPosition cameraPosition) {
                     context
                         .read<ClientMapSeekerBloc>()
-                        .add(OnCameraMove(cameraPosition: cameraPosition));
+                        .add(OnCameraMoveDestination(cameraPosition: cameraPosition));
                   },
-                  onCameraIdle: () async {
-                    context.read<ClientMapSeekerBloc>().add(OnCameraIdle());
+                onCameraIdle: () async {                  
+                  context.read<ClientMapSeekerBloc>().add(OnCameraIdleDestination());
+                  
                   },
                   onMapCreated: (GoogleMapController controller) {
                     controller.setMapStyle(
@@ -81,7 +80,7 @@ class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
                     Navigator.pop(context);
                   }, 
                     icon: const Icon(Icons.arrow_back_ios_new_rounded), 
-                    color: Colors.amber, 
+                    color: const Color.fromARGB(255, 243, 159, 90,), 
                     iconSize: 40,
                   )
                 ),
@@ -97,11 +96,12 @@ class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
                     child: DefaultElevatedButton(
                         text: 'SELECCIONA EL DESTINO',
                         onPressed: () {
-                          Navigator.pop(context, pickUpController.text);
+                          final arg = { 'destinationSelection': destinationController.text, 'destinationLatlng': [state.cameraPosition.target.latitude, state.cameraPosition.target.longitude] };
+                          Navigator.pop(context, arg);
                           print(
-                              'enviando al map seeker page: $pickUpController');
+                              'enviando al map seeker page: ${arg}');
                         },
-                        colorFondo: Colors.amberAccent,
+                        colorFondo: const Color.fromARGB(255, 243, 159, 90,),
                         colorLetra: Colors.black),
                   ),
                 ],
@@ -119,8 +119,8 @@ class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
       alignment: Alignment.center,
       child: Image.asset(
         'assets/img/gps-3.png',
-        width: 100,
-        height: 100,
+        width: 70,
+        height: 70,
       ),
     );
   }

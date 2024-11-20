@@ -35,7 +35,7 @@ class RegisterContent extends StatelessWidget {
             
                   const SizedBox( height: 50,),
                   const Text('Lets ride', style: TextStyle( fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
-                  const Text('HeyTaxi', style: TextStyle( fontSize: 40, fontWeight: FontWeight.bold, color: Colors.amberAccent),),
+                  const Text('HeyTaxi', style: TextStyle( fontSize: 40, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 243, 159, 90,),),),
                   const Text('Register', style: TextStyle( fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),),
               
                     
@@ -104,7 +104,7 @@ class RegisterContent extends StatelessWidget {
                           }
         
                         }, 
-                        colorFondo: Colors.amber, 
+                        colorFondo: const Color.fromARGB(255, 243, 159, 90,), 
                         colorLetra: Colors.black
                        )
                     

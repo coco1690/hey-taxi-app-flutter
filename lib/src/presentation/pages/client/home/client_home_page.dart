@@ -33,8 +33,8 @@ class _ClientHomePageState extends State<ClientHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[900],
-        foregroundColor: Colors.amber,
+        backgroundColor:const Color.fromARGB(255, 243, 159, 90,),
+        foregroundColor: const Color.fromARGB(255,	237,	227,	213,),
       ),
       body: BlocBuilder<ClientHomeBloc, ClientHomeState>(
         builder: (context, state) {
@@ -50,7 +50,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
               padding: EdgeInsets.zero,
               children: [
                 DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.blueGrey.shade900),
+                  decoration: const BoxDecoration(color: Color.fromARGB(255,	241,	145,	109)),
                   child: SingleChildScrollView(
                     child: _imageLisTitleUser(context, state, clientHomeBloc, user )
                 )              

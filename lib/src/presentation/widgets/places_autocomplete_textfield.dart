@@ -16,15 +16,16 @@ class PleacesAutocompleteTextfield extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       
-      height: MediaQuery.of(context).size.height * 0.054,
+      height: MediaQuery.of(context).size.height * 0.060,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15),
+
       child: GooglePlaceAutoCompleteTextField(
         textEditingController: controller,
         googleAPIKey: ApiConfig.API_GOOGLE_MAPS,
         debounceTime: 1000, 
         boxDecoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color.fromARGB(255,	237,	227,	213,),
           borderRadius: BorderRadius.circular(10),
         ),
         inputDecoration: InputDecoration(

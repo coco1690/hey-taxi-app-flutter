@@ -72,21 +72,21 @@ Widget _headerProfile(BuildContext context){
           alignment: Alignment.topCenter,
           height: MediaQuery.of(context).size.height * 0.35,
           width:  MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             
-            color: Colors.blueGrey.shade900,
+            color: Color.fromARGB(255, 243, 159, 90,),
          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
                Container(
-                margin: const EdgeInsets.only(right: 30, left: 20),
+                margin: const EdgeInsets.only(right: 10, left: 20),
                 child: IconButton(
                   onPressed: (){
                     Navigator.pop(context);
                   }, 
                     icon: const Icon(Icons.arrow_back_ios_new_rounded), 
-                    color: Colors.amber, 
+                    color: const Color.fromARGB(255,	237,	227,	213,), 
                     iconSize: 30,
                   )
                 ),
@@ -107,7 +107,7 @@ Widget _cardInfoUser( BuildContext context, User? user, ProfileUpdateState state
     width: MediaQuery.of(context).size.width,
     height: 360,
     child: Card(
-      color: Colors.blueGrey[800],
+      color: const Color.fromARGB(255, 56,	67,	88),
       child: Column(
         children: [
           Stack(
@@ -146,7 +146,7 @@ Widget _cardInfoUser( BuildContext context, User? user, ProfileUpdateState state
             ),
             Container(
               margin: const EdgeInsets.only( top: 100, left: 80),
-              child:  const Icon(Icons.add_a_photo_rounded, color: Colors.amberAccent, size: 30,)
+              child:  const Icon(Icons.add_a_photo_rounded, color:  Color.fromARGB(255,	237,	227,	213,), size: 30,)
               ),
         ]
       ),

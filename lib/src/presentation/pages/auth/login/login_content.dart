@@ -37,7 +37,7 @@ class LoginContent extends StatelessWidget {
                       
                     const SizedBox( height: 50,),
                     const Text('Lets ride', style: TextStyle( fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),),
-                    const Text('HeyTaxi', style: TextStyle( fontSize: 40, fontWeight: FontWeight.bold, color: Colors.amberAccent),),
+                    const Text('HeyTaxi', style: TextStyle( fontSize: 40, fontWeight: FontWeight.bold, color:  Color.fromRGBO(243, 159, 90, 20),),),
                 
                         
                   Container(
@@ -89,7 +89,7 @@ class LoginContent extends StatelessWidget {
                                 }
                               }, 
                             
-                            colorFondo: Colors.amber, 
+                            colorFondo: const Color.fromARGB(255, 243, 159, 90,),
                             colorLetra: Colors.black
                           )
                           
@@ -110,7 +110,7 @@ class LoginContent extends StatelessWidget {
                             onPressed: (){
                               Navigator.pushNamed(context, 'register');
                             }, 
-                            colorFondo:  Colors.white, 
+                            colorFondo: const Color.fromARGB(255,	232,	188,	185,), 
                             colorLetra: Colors.black
                            )
                         
