@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DefaultElevatedButton extends StatelessWidget {
 
   final String text;
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final Color colorFondo;
   final Color colorLetra;
 
@@ -14,8 +14,7 @@ class DefaultElevatedButton extends StatelessWidget {
   required this.onPressed, 
   required this.colorFondo,
   required this.colorLetra,
-
-    });
+  });
 
   @override
   Widget build(BuildContext context) {

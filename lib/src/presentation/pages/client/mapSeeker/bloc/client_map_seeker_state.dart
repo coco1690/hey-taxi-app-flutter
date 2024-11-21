@@ -10,25 +10,26 @@ class ClientMapSeekerState extends Equatable {
   final Completer<GoogleMapController>? controller;
   final Position? position;
   final CameraPosition cameraPosition;
-  final CameraPosition cameraPositionDestination;
   final PlacemarkData? placemarkData;
   final LatLng? pickUpPLatLng;
   final LatLng? destinationLatLng;
   final String pickUpDescription;
   final String destinationDescription;
-  
+  final bool isButtonEnabled;
+  final bool isUpdateStatedestinatio;
   final Map<MarkerId, Marker>? markers;
 
   const ClientMapSeekerState({
     this.position,
     this.controller,
-    this.cameraPosition = const CameraPosition(target: LatLng( 4.1247564,-73.6502597), zoom: 14.0),
-    this.cameraPositionDestination = const CameraPosition(target: LatLng( 4.1247564,-73.6502597), zoom: 14.0),
+    this.cameraPosition = const CameraPosition(target: LatLng(4.7109886, -74.072092 ), zoom: 14.0),
     this.placemarkData,
     this.pickUpPLatLng,
     this.destinationLatLng,
     this.pickUpDescription = '',
     this.destinationDescription = '',
+    this.isButtonEnabled = false,
+    this.isUpdateStatedestinatio = true,
     this.markers = const <MarkerId, Marker>{},
   });
 
@@ -36,12 +37,13 @@ class ClientMapSeekerState extends Equatable {
     Position? position,
     Completer<GoogleMapController>? controller,
     CameraPosition? cameraPosition,
-    CameraPosition? cameraPositionDestination,
     PlacemarkData? placemarkData,
     LatLng? pickUpPLatLng,
     LatLng? destinationLatLng,
     String? pickUpDescription,
     String? destinationDescription,
+    bool? isButtonEnabled,
+    bool? isUpdateStatedestinatio,
     Map<MarkerId, Marker>? markers,
 
   }) {
@@ -49,17 +51,34 @@ class ClientMapSeekerState extends Equatable {
       position: position ?? this.position,
       controller: controller ?? this.controller,
       cameraPosition: cameraPosition ?? this.cameraPosition,
-      cameraPositionDestination: cameraPositionDestination ?? this.cameraPositionDestination,
       placemarkData: placemarkData ?? this.placemarkData,
       pickUpPLatLng: pickUpPLatLng ?? this.pickUpPLatLng,
       destinationLatLng: destinationLatLng ?? this.destinationLatLng,
       pickUpDescription: pickUpDescription ?? this.pickUpDescription,
       destinationDescription: destinationDescription ?? this.destinationDescription,
+      isButtonEnabled: isButtonEnabled ?? this.isButtonEnabled,
+      isUpdateStatedestinatio: isUpdateStatedestinatio ?? this.isUpdateStatedestinatio,
       markers: markers ?? this.markers,
     );
   }
 
 
   @override
-  List<Object?> get props => [position, controller, markers, cameraPosition, cameraPositionDestination, placemarkData, pickUpPLatLng, destinationLatLng, pickUpDescription, destinationDescription];
+  List<Object?> get props => [
+    position, 
+    controller, 
+    markers, 
+    cameraPosition, 
+    placemarkData, 
+    pickUpPLatLng, 
+    destinationLatLng, 
+    pickUpDescription, 
+    destinationDescription, 
+    isButtonEnabled,
+    isUpdateStatedestinatio
+    ];
 }
+
+
+// 4.7109886, -74.072092 bogota
+// 4.1247564,-73.6502597 villavo

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hey_taxi_app/bloc_providers.dart';
 import 'package:hey_taxi_app/injection.dart';
-import 'src/presentation/pages/client/mapSeeker/client_selection_map_page.dart';
-import 'src/presentation/pages/client/map_booking_info.dart/map_booking_info_page.dart';
+import 'src/presentation/pages/client/mapSeekerDestination/client_destination_map_page.dart';
+import 'src/presentation/pages/client/mapBookingInfo/map_booking_info_page.dart';
 import 'src/presentation/pages/index.dart';
 
 
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           'register':               (BuildContext context) => const RegisterPage(),
           'client/home':            (BuildContext context) => const ClientHomePage(),
           'profile/update':         (BuildContext context) => const ProfileUpdatePage(),
-          'client/selectionmap':    (BuildContext context) => const ClientSelectionMapPage(),
+          'client/destinationmap':  (BuildContext context) => const ClientDestinationMapPage(),
           'client/map/booking':     (BuildContext context) => const MapBookingInfoPage(),
         },
       ),

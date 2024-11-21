@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker.bloc.dart';
-import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker.event.dart';
 import 'package:hey_taxi_app/src/presentation/widgets/default_elevatedbutton.dart';
-import 'bloc/client_map_seeker.state.dart';
+import 'bloc/index.dart';
 
-class ClientSelectionMapPage extends StatefulWidget {
-  const ClientSelectionMapPage({super.key});
+class ClientDestinationMapPage extends StatefulWidget {
+  const ClientDestinationMapPage({super.key});
 
   @override
-  State<ClientSelectionMapPage> createState() => _ClientSelectionMapPageState();
+  State<ClientDestinationMapPage> createState() => _ClientDestinationMapPageState();
 }
 
-class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
+class _ClientDestinationMapPageState extends State<ClientDestinationMapPage> {
  
   TextEditingController destinationController = TextEditingController();
 
@@ -21,25 +19,26 @@ class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<ClientMapSeekerBloc>().add(ClientMapSeekerInitEvent());
-      context.read<ClientMapSeekerBloc>().add(FindMyPosition());
-      context.read<ClientMapSeekerBloc>().add(ChangeMapCameraPosition(lat: 4.144223, lng: -73.606649));
+      context.read<ClientDestinationMapBloc>().add(ClientDestinationMapInitEvent());
+      context.read<ClientDestinationMapBloc>().add(FindMyPositionDestinationMap());
+      // context.read<ClientDestinationMapBloc>().add(ChangeMapCameraPositionDestination(lat: 4.144223, lng: -73.606649));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<ClientMapSeekerBloc, ClientMapSeekerState>(
+      body: BlocBuilder<ClientDestinationMapBloc, ClientDestinationMapState>(
         builder: (context, state) {
           return Stack(
             children: [
               // ################  BLOCLISTENER ###################
-              BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
+              BlocListener<ClientDestinationMapBloc, ClientDestinationMapState>(
                 listener: (context, state) {
-                  if (state.placemarkData != null) {
-                    destinationController.text = state.placemarkData!.address;
-                      context.read<ClientMapSeekerBloc>().add(OnGoogleAutocompleteDestinationSelected(
+                  if (state.placemarkData != null) {                 
+                      destinationController.text = state.placemarkData!.address;     
+                                                  
+                      context.read<ClientDestinationMapBloc>().add(OnGoogleAutocompleteSelectedDestinationMap(
                       lat: state.placemarkData!.lat,
                       lng: state.placemarkData!.lng, 
                       destinationDescription: state.placemarkData!.address,
@@ -49,15 +48,15 @@ class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
                
                 child: GoogleMap(
                   mapType: MapType.normal,
-                  initialCameraPosition: state.cameraPosition,
+                  initialCameraPosition: state.cameraPositionDestination,
 
                   onCameraMove: (CameraPosition cameraPosition) {
                     context
-                        .read<ClientMapSeekerBloc>()
+                        .read<ClientDestinationMapBloc>()
                         .add(OnCameraMoveDestination(cameraPosition: cameraPosition));
                   },
                 onCameraIdle: () async {                  
-                  context.read<ClientMapSeekerBloc>().add(OnCameraIdleDestination());
+                  context.read<ClientDestinationMapBloc>().add(OnCameraIdleDestination());
                   
                   },
                   onMapCreated: (GoogleMapController controller) {
@@ -70,7 +69,7 @@ class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
                     }
                   },
                 ),
-              ),
+              ), 
                Container(
                 margin: const EdgeInsets.only(top:100, left: 20),
                 child: IconButton(
@@ -96,7 +95,11 @@ class _ClientSelectionMapPageState extends State<ClientSelectionMapPage> {
                     child: DefaultElevatedButton(
                         text: 'SELECCIONA EL DESTINO',
                         onPressed: () {
-                          final arg = { 'destinationSelection': destinationController.text, 'destinationLatlng': [state.cameraPosition.target.latitude, state.cameraPosition.target.longitude] };
+                          final arg = { 
+                            'destinationSelection': destinationController.text, 
+                            'lat': state.cameraPositionDestination.target.latitude, 
+                            'lng': state.cameraPositionDestination.target.longitude 
+                          };
                           Navigator.pop(context, arg);
                           print(
                               'enviando al map seeker page: ${arg}');

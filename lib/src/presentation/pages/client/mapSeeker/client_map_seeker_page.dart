@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker.bloc.dart';
-import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker.event.dart';
+import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker_bloc.dart';
+import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker_event.dart';
 import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/client_map_seeker_content.dart';
-import 'bloc/client_map_seeker.state.dart';
+import 'bloc/client_map_seeker_state.dart';
 
 class ClientMapSeekerPage extends StatefulWidget {
   const ClientMapSeekerPage({super.key});
@@ -24,7 +24,7 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<ClientMapSeekerBloc>().add(ClientMapSeekerInitEvent());
       context.read<ClientMapSeekerBloc>().add(FindMyPosition());
-    
+
     });
   }
 
