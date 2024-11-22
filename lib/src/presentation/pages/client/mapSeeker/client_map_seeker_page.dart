@@ -12,9 +12,8 @@ class ClientMapSeekerPage extends StatefulWidget {
   State<ClientMapSeekerPage> createState() => _ClientMapSeekerPageState();
 }
 class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
-  // final Completer<GoogleMapController> _controller =
-  //     Completer<GoogleMapController>();
-
+  
+  
   TextEditingController destinationController = TextEditingController();
   TextEditingController pickUpController = TextEditingController();
 
@@ -33,7 +32,7 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
     return Scaffold(
       body: BlocBuilder<ClientMapSeekerBloc, ClientMapSeekerState>(
         builder: (context, state) {
-          return ClientMapSeekerContent(state, destinationController: destinationController, pickUpController: pickUpController);
+          return ClientMapSeekerContent(state, destinationController: destinationController, pickUpController: pickUpController );
         },
       ),
     );

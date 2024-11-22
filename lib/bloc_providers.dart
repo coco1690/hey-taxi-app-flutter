@@ -12,6 +12,7 @@ import 'package:hey_taxi_app/src/presentation/pages/profile/info/bloc/index.dart
 import 'package:hey_taxi_app/src/presentation/pages/profile/update/bloc/index.dart';
 import 'src/presentation/pages/auth/register/bloc/register_bloc.dart';
 import 'src/presentation/pages/auth/register/bloc/register_event.dart';
+import 'src/presentation/pages/client/mapBookingInfo/bloc/index.dart';
 
 
 
@@ -25,6 +26,7 @@ List<BlocProvider> blocProvider = [
   BlocProvider<ProfileUpdateBloc>        (create: (context) => ProfileUpdateBloc        ( locator<UserUseCases>(), locator<AuthUseCases>())),
   BlocProvider<ClientMapSeekerBloc>      (create: (context) => ClientMapSeekerBloc      ( locator<GeolocatorUseCases>())),
   BlocProvider<ClientDestinationMapBloc> (create: (context) => ClientDestinationMapBloc ( locator<GeolocatorUseCases>())),
+  BlocProvider<ClientMapBookingInfoBloc> (create: (context) => ClientMapBookingInfoBloc ( locator<GeolocatorUseCases>())),
 
 
 ];

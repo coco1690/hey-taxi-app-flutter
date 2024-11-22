@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/src/data/api/api_config.dart';
 import 'package:hey_taxi_app/src/domain/repository/gelocator_repository.dart';
 
 import '../../domain/models/placemark_data.dart';
@@ -85,4 +87,23 @@ class GeolocatorRepositoryImpl implements GeolocatorRepository {
     return null;
 }
 
+  @override
+  Future<List<LatLng>> getPolyline( LatLng pickUpPLatLng, LatLng destinationLatLng ) async {
+    PolylineResult result = await PolylinePoints().getRouteBetweenCoordinates(
+      googleApiKey: ApiConfig.API_GOOGLE_MAPS,
+      request: PolylineRequest(
+        origin: PointLatLng( pickUpPLatLng.latitude, pickUpPLatLng.longitude),
+        destination: PointLatLng(destinationLatLng.latitude, destinationLatLng.longitude),
+        mode: TravelMode.driving, // traza la ruta de manera automática dependiendo si es bicicleta o automóvil
+        wayPoints: [PolylineWayPoint(location: "Villavicencio, Colombia")],
+      ),
+    );
+     final List<LatLng> polylineCoordinates = [];
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+    return polylineCoordinates;
+  }
 }

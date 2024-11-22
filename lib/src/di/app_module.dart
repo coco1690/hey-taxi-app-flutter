@@ -14,6 +14,7 @@ import 'package:hey_taxi_app/src/domain/usecase/geolocator/findmyposition_usecas
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/geolocator_usecases.dart';
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/get_marker_usecase.dart';
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/get_placemark_data_usecase.dart';
+import 'package:hey_taxi_app/src/domain/usecase/geolocator/get_polyline_usecase.dart';
 import 'package:hey_taxi_app/src/domain/usecase/user/update_user_use_case.dart';
 import 'package:hey_taxi_app/src/domain/usecase/user/user_use_cases.dart';
 import 'package:injectable/injectable.dart';
@@ -73,6 +74,7 @@ abstract class AppModule{
       findMyPosition:   FindMyPositionUseCase   (geolocatorRepository),
       createMarker:     CreateMarkerUseCase     (geolocatorRepository),
       getMarker:        GetMarkerUseCase        (geolocatorRepository),
-      getPlacemarkData: GetPlacemarkDataUsecase (geolocatorRepository)
+      getPlacemarkData: GetPlacemarkDataUsecase (geolocatorRepository),
+      getPolyline:      GetPolylineUseCase      (geolocatorRepository)
     );
 }

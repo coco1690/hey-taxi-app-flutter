@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+
 import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -8,9 +8,7 @@ import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client
 import 'package:hey_taxi_app/src/presentation/widgets/default_elevatedbutton.dart';
 import 'package:hey_taxi_app/src/presentation/widgets/places_autocomplete_textfield.dart';
 
-
 class ClientMapSeekerContent extends StatelessWidget {
-  
   final ClientMapSeekerState state;
   final TextEditingController pickUpController;
   final TextEditingController destinationController;
@@ -37,14 +35,8 @@ class ClientMapSeekerContent extends StatelessWidget {
 // ############ WIDGETS ############
 
   Widget _googleMaps(BuildContext context, ClientMapSeekerState state) {
-    return BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
-      listener: (context, state) {
-          if (state.placemarkData != null) {
-         pickUpController.text = state.placemarkData!.address ;
-          }
-        
-      },
-      child: GoogleMap(
+    return 
+       GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: state.cameraPosition,
         markers: Set<Marker>.of(state.markers?.values ?? {}),
@@ -54,15 +46,19 @@ class ClientMapSeekerContent extends StatelessWidget {
               .add(OnCameraMove(cameraPosition: cameraPosition));
         },
         onCameraIdle: () async {
-          context.read<ClientMapSeekerBloc>().add(OnCameraIdle());      
+          context.read<ClientMapSeekerBloc>().add(OnCameraIdle());
+           pickUpController.text = state.placemarkData?.address ?? '';
+           print('pickUpController: ${state.placemarkData?.address}');
           if (state.placemarkData != null) {
-            context.read<ClientMapSeekerBloc>().add(OnGoogleAutocompletepickUpSelected(
+            context
+                .read<ClientMapSeekerBloc>()
+                .add(OnGoogleAutocompletepickUpSelected(
                   lat: state.placemarkData!.lat,
                   lng: state.placemarkData!.lng,
                   pickUpDescription: state.placemarkData!.address,
-                ));           
+                ));
           }
-        },  
+        },
         onMapCreated: (GoogleMapController controller) {
           // controller.setMapStyle(
           //     '[ { "featureType": "all", "elementType": "labels.text.fill", "stylers": [ { "color": "#ffffff" } ] }, { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [ { "color": "#000000" }, { "lightness": 13 } ] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [ { "color": "#000000" } ] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [ { "color": "#144b53" }, { "lightness": 14 }, { "weight": 1.4 } ] }, { "featureType": "landscape", "elementType": "all", "stylers": [ { "color": "#08304b" } ] }, { "featureType": "poi", "elementType": "geometry", "stylers": [ { "color": "#0c4152" }, { "lightness": 5 } ] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [ { "color": "#000000" } ] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [ { "color": "#0b434f" }, { "lightness": 25 } ] }, { "featureType": "road.arterial", "elementType": "geometry.fill", "stylers": [ { "color": "#000000" } ] }, { "featureType": "road.arterial", "elementType": "geometry.stroke", "stylers": [ { "color": "#0b3d51" }, { "lightness": 16 } ] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [ { "color": "#000000" } ] }, { "featureType": "transit", "elementType": "all", "stylers": [ { "color": "#146474" } ] }, { "featureType": "water", "elementType": "all", "stylers": [ { "color": "#021019" } ] } ]');
@@ -72,11 +68,12 @@ class ClientMapSeekerContent extends StatelessWidget {
             }
           }
         },
-      ),
     );
   }
 
-  Widget _iconMyLocation(BuildContext context,) {
+  Widget _iconMyLocation(
+    BuildContext context,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 25),
       alignment: Alignment.center,
@@ -89,62 +86,62 @@ class ClientMapSeekerContent extends StatelessWidget {
   }
 
   Widget _cardAddressDestination(BuildContext context) {
-  return Container(
-    height: 162,
-    margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
-    child: Card(
-      color: const Color.fromARGB(
-        255,
-        237,
-        227,
-        213,
-      ),
-      shadowColor: Colors.black,
-      elevation: 5,
-      child: Column(
-        children: [
-        PleacesAutocompleteTextfield(
-          controller: pickUpController,
-          label: 'Donde estas',
-          onPlaceSelected: (prediction) {
-            context.read<ClientMapSeekerBloc>().add(ChangeMapCameraPosition(
-                lat: double.parse(prediction.lat.toString()),
-                lng: double.parse(prediction.lng.toString())));
-            context
-                .read<ClientMapSeekerBloc>()
-                .add(OnGoogleAutocompletepickUpSelected(
-                  lat: double.parse(prediction.lat.toString()),
-                  lng: double.parse(prediction.lng.toString()),
-                  pickUpDescription: prediction.description.toString(),
-                ));
-          },
+    return Container(
+      height: 162,
+      margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
+      child: Card(
+        color: const Color.fromARGB(
+          255,
+          237,
+          227,
+          213,
         ),
+        shadowColor: Colors.black,
+        elevation: 5,
+        child: Column(
+          children: [
+          PleacesAutocompleteTextfield(
+                controller: pickUpController,
+                label: 'Donde estas',
+                onPlaceSelected: (prediction) {
+                  context.read<ClientMapSeekerBloc>().add(
+                      ChangeMapCameraPosition(
+                          lat: double.parse(prediction.lat.toString()),
+                          lng: double.parse(prediction.lng.toString())));
+                  context
+                      .read<ClientMapSeekerBloc>()
+                      .add(OnGoogleAutocompletepickUpSelected(
+                        lat: double.parse(prediction.lat.toString()),
+                        lng: double.parse(prediction.lng.toString()),
+                        pickUpDescription: prediction.description.toString(),
+                      ));
+                },
+              ),
+            
+          PleacesAutocompleteTextfield(
+              controller: destinationController,
+              label: 'Donde te llevo',
+              onPlaceSelected: (prediction) {
         
-        PleacesAutocompleteTextfield(
-          controller: destinationController,
-          label: 'Donde te llevo',
-          onPlaceSelected: (prediction) { 
-          print('destinationController: $destinationController' );
-                        
-            context
-                .read<ClientMapSeekerBloc>()
-                .add(OnGoogleAutocompleteDestinationSelected(
-                  lat: double.parse(prediction.lat.toString()),
-                  lng: double.parse(prediction.lng.toString()),
-                  destinationDescription: prediction.description.toString(),
-                ));
-          },
+                context
+                    .read<ClientMapSeekerBloc>()
+                    .add(OnGoogleAutocompleteDestinationSelected(
+                      lat: double.parse(prediction.lat.toString()),
+                      lng: double.parse(prediction.lng.toString()),
+                      destinationDescription: prediction.description.toString(),
+                    ));
+              },
             ),
-      Row(
-        children: [
-          _textBottonSelectOnMapDestination(context),
+            Row(
+              children: [
+                _textBottonSelectOnMapDestination(context),
+              ],
+            ),
           ],
-          ),
-        ], 
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buttonSelectedDestination(BuildContext context) {
     final isButtonEnabled = pickUpController.text.isNotEmpty &&
@@ -160,6 +157,8 @@ class ClientMapSeekerContent extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 50),
           child: BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
             listener: (context, state) {
+
+           
               context.read<ClientMapSeekerBloc>().add(OnUpdaateButtonEstate(
                   isButtonEnabled: state.isButtonEnabled));
             },
@@ -200,12 +199,13 @@ class ClientMapSeekerContent extends StatelessWidget {
         );
         if (result != null && result is Map<String, dynamic>) {
           destinationController.text = result['destinationSelection'] ?? '';
-            context.read<ClientMapSeekerBloc>().add(OnGoogleAutocompleteDestinationSelected(
-            lat: result['lat'] ?? 0.0,
-            lng: result['lng'] ?? 0.0,
-            destinationDescription: result['destinationSelection'] ?? '',
-          ),
-        );
+          context.read<ClientMapSeekerBloc>().add(
+                OnGoogleAutocompleteDestinationSelected(
+                  lat: result['lat'] ?? 0.0,
+                  lng: result['lng'] ?? 0.0,
+                  destinationDescription: result['destinationSelection'] ?? '',
+                ),
+              );
         }
       },
       icon: const Icon(Icons.add_location_alt_rounded),

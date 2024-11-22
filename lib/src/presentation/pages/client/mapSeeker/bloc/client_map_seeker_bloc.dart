@@ -24,30 +24,40 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
       ));
    });
 
-   on<FindMyPosition>((event, emit) async {
-    Position position = await geolocatorUseCases.findMyPosition.run();
-     add(ChangeMapCameraPosition(lat: position.latitude, lng: position.longitude));
-     BitmapDescriptor imageMarker = await geolocatorUseCases.createMarker.run('assets/img/gps-2.png');
-     Marker marker = geolocatorUseCases.getMarker.run(
-        'MyLocation', 
-        position.latitude,
-        position.longitude,
-        imageMarker, 
-        'Mi Posicion',
-        ''
-        );
-        emit(
-          state.copyWith(
-            position: position, 
-            markers: {
-              marker.markerId: marker
-            },
+  //  on<FindMyPosition>((event, emit) async {
+  //   Position position = await geolocatorUseCases.findMyPosition.run();
+  //    add(ChangeMapCameraPosition(lat: position.latitude, lng: position.longitude));
+  //    BitmapDescriptor imageMarker = await geolocatorUseCases.createMarker.run('assets/img/gps-2.png');
+  //    Marker marker = geolocatorUseCases.getMarker.run(
+  //       'MyLocation', 
+  //       position.latitude,
+  //       position.longitude,
+  //       imageMarker, 
+  //       'Mi Posicion',
+  //       ''
+  //       );
+  //       emit(
+  //         state.copyWith(
+  //           position: position, 
+  //           markers: {
+  //             marker.markerId: marker
+  //           },
 
-          )
-        );
+  //         )
+  //       );
       
-    print('Desde el clientmapseekerbloc: ${position.latitude}, ${position.longitude}');
-  });
+  //   print('Desde el clientmapseekerbloc: ${position.latitude}, ${position.longitude}');
+  // });
+
+   on<FindMyPosition>((event, emit) async {
+      Position position = await geolocatorUseCases.findMyPosition.run();
+      add(ChangeMapCameraPosition(lat: position.latitude, lng: position.longitude));
+      emit(
+        state.copyWith(
+          position: position,
+        )
+      );
+    });
 
    on<ChangeMapCameraPosition>((event, emit) async {
   try {
