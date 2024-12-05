@@ -17,7 +17,7 @@ class ClientMapSeekerState extends Equatable {
   final String destinationDescription;
   final bool isButtonEnabled;
   final bool isUpdateStatedestinatio;
-  final Map<MarkerId, Marker>? markers;
+  final Map<MarkerId, Marker> markers;
 
   const ClientMapSeekerState({
     this.position,

@@ -61,7 +61,7 @@ class PleacesAutocompleteTextfield extends StatelessWidget {
                 Expanded(child: Text(prediction.description ?? "")),
               ],
             ),
-          );
+          ); 
         },
         isCrossBtnShown: true,
       ),

@@ -6,6 +6,6 @@ class CreateMarkerUseCase {
 
   CreateMarkerUseCase(this.geolocatorRepository);
 
-  run(String path) => geolocatorRepository.createMarkerFromAsset(path);
+  run(String path, double width, double height) => geolocatorRepository.createMarkerFromAsset(path, width, height);
   
 }

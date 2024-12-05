@@ -1,5 +1,5 @@
 import 'dart:async';
-
+ 
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,6 +16,7 @@ class ClientMapBookingInfoState extends Equatable {
   final String destinationDescription;
   final Map<MarkerId, Marker> markers;
   final Map<PolylineId, Polyline> polylines ;
+  final bool isBottomSheetExpanded;
 
   const ClientMapBookingInfoState({
     this.position,
@@ -27,6 +28,7 @@ class ClientMapBookingInfoState extends Equatable {
     this.destinationDescription = '',
     this.markers = const <MarkerId, Marker>{},
     this.polylines = const <PolylineId, Polyline>{},
+    this.isBottomSheetExpanded = false,
   });
 
   ClientMapBookingInfoState copyWith({
@@ -39,6 +41,7 @@ class ClientMapBookingInfoState extends Equatable {
     String? destinationDescription,
     Map<MarkerId, Marker>? markers,
     Map<PolylineId, Polyline>? polylines,
+    bool? isBottomSheetExpanded,
 
   }) {
     return ClientMapBookingInfoState(
@@ -51,6 +54,8 @@ class ClientMapBookingInfoState extends Equatable {
       destinationDescription: destinationDescription ?? this.destinationDescription,
       markers: markers ?? this.markers,
       polylines: polylines ?? this.polylines,
+      isBottomSheetExpanded: isBottomSheetExpanded ?? this.isBottomSheetExpanded,
+
     );
   }
 
@@ -66,6 +71,7 @@ class ClientMapBookingInfoState extends Equatable {
     pickUpDescription, 
     destinationDescription, 
     polylines,
+    isBottomSheetExpanded,
     ];
 }
 

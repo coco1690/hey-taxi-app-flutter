@@ -35,8 +35,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       final authResponseModel = response.data as AuthResponseModel; // casteo la data de response.data
                       context.read<RegisterBloc>().add(FormReset()); // REINICIO EL FORMULARIO
                       context.read<RegisterBloc>().add( SaveUserSession ( authResponseModel: authResponseModel ) );
-
-                      Navigator.pushNamedAndRemoveUntil(context, 'client/home', (route) => false);
+                       if( authResponseModel.user.roles!.length > 1 ) {
+                        Navigator.pushNamedAndRemoveUntil(context, 'roles', (route) => false);
+                      } else{
+                        Navigator.pushNamedAndRemoveUntil(context, 'client/home', (route) => false);
+                      }
+                      
                       // print('Succes Data: ${response.data}');
                   }
           },

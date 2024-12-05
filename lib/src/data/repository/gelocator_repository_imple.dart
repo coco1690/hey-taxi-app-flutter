@@ -41,8 +41,10 @@ class GeolocatorRepositoryImpl implements GeolocatorRepository {
   }
 
   @override
-  Future<BitmapDescriptor> createMarkerFromAsset(String path) async {
-    ImageConfiguration configuration = const ImageConfiguration();
+  Future<BitmapDescriptor> createMarkerFromAsset(String path, double width, double height) async {
+   final ImageConfiguration configuration =  ImageConfiguration(
+     size: Size(width, height),
+   );
     BitmapDescriptor descriptor = await BitmapDescriptor.asset(configuration, path,);
     return descriptor;
 
@@ -100,9 +102,9 @@ class GeolocatorRepositoryImpl implements GeolocatorRepository {
     );
      final List<LatLng> polylineCoordinates = [];
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+      for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
+      }
     }
     return polylineCoordinates;
   }

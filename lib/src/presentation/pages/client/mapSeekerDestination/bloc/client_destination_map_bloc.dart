@@ -20,30 +20,40 @@ class ClientDestinationMapBloc extends Bloc<ClientDestinationMapEvent, ClientDes
      emit(state.copyWith(controller: controller));
    });
 
-   on<FindMyPositionDestinationMap>((event, emit) async {
-    Position position = await geolocatorUseCases.findMyPosition.run();
-     add(ChangeMapCameraPositionDestination(lat: position.latitude, lng: position.longitude));
-     BitmapDescriptor imageMarker = await geolocatorUseCases.createMarker.run('assets/img/gps-2.png');
-     Marker marker = geolocatorUseCases.getMarker.run(
-        'MyLocation', 
-        position.latitude,
-        position.longitude,
-        imageMarker, 
-        'Mi Posicion',
-        ''
-        );
-        emit(
-          state.copyWith(
-            position: position, 
-            markers: {
-              marker.markerId: marker
-            },
+  //  on<FindMyPositionDestinationMap>((event, emit) async {
+  //   Position position = await geolocatorUseCases.findMyPosition.run();
+  //    add(ChangeMapCameraPositionDestination(lat: position.latitude, lng: position.longitude));
+  //    BitmapDescriptor imageMarker = await geolocatorUseCases.createMarker.run('assets/img/gps-2.png', 50.0, 50.0);
+  //    Marker marker = geolocatorUseCases.getMarker.run(
+  //       'MyLocation', 
+  //       position.latitude,
+  //       position.longitude,
+  //       imageMarker, 
+  //       'Mi Posicion',
+  //       ''
+  //       );
+  //       emit(
+  //         state.copyWith(
+  //           position: position, 
+  //           markers: {
+  //             marker.markerId: marker
+  //           },
 
-          )
-        );
+  //         )
+  //       );
       
-    print('Desde el clientmapseekerbloc: ${position.latitude}, ${position.longitude}');
-  });
+  //   print('Desde el clientmapseekerbloc: ${position.latitude}, ${position.longitude}');
+  // });
+
+  on<FindMyPositionDestinationMap>((event, emit) async {
+      Position position = await geolocatorUseCases.findMyPosition.run();
+      add(ChangeMapCameraPositionDestination(lat: position.latitude, lng: position.longitude));
+      emit(
+        state.copyWith(
+          position: position,
+        )
+      );
+    });
 
    on<ChangeMapCameraPositionDestination>((event, emit) async {
   try {

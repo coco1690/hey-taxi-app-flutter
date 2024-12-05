@@ -7,7 +7,7 @@ import '../models/placemark_data.dart';
 abstract class GeolocatorRepository {
   Future<Position> findMyPosition();
   
-  Future<BitmapDescriptor> createMarkerFromAsset(String path);
+  Future<BitmapDescriptor> createMarkerFromAsset(String path, double width, double height);
   Marker getMarker(
     String markerId,
     double lat,

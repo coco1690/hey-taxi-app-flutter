@@ -39,7 +39,7 @@ class ClientMapSeekerContent extends StatelessWidget {
        GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: state.cameraPosition,
-        markers: Set<Marker>.of(state.markers?.values ?? {}),
+        markers: Set<Marker>.of(state.markers.values),
         onCameraMove: (CameraPosition cameraPosition) {
           context
               .read<ClientMapSeekerBloc>()
@@ -87,7 +87,7 @@ class ClientMapSeekerContent extends StatelessWidget {
 
   Widget _cardAddressDestination(BuildContext context) {
     return Container(
-      height: 162,
+      height: 165,
       margin: const EdgeInsets.only(top: 10, left: 30, right: 30),
       child: Card(
         color: const Color.fromARGB(

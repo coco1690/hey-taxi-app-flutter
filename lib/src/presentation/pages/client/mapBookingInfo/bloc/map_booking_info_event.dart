@@ -27,7 +27,10 @@ class ChangeMapCameraPositionMapBookingInfo extends ClientMapBookingInfoEvent {
 
 class AddPolyline extends ClientMapBookingInfoEvent {}
   
-
+class ToggleBottomSheetEvent extends ClientMapBookingInfoEvent{
+  final bool isBottomSheetExpanded;
+  ToggleBottomSheetEvent({required this.isBottomSheetExpanded});
+}
 
 
 

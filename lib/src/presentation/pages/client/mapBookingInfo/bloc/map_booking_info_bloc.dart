@@ -16,7 +16,7 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
     
 
    on<ClientMapBookingInfoInitEvent>((event, emit) async {
-    final Completer<GoogleMapController> controller = Completer<GoogleMapController>();
+    final Completer<GoogleMapController> controller = Completer<GoogleMapController>(); 
      emit(
       state.copyWith(
         controller: controller,
@@ -24,6 +24,32 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
         destinationLatLng: event.destinationLatLng,
         pickUpDescription: event.pickUpDescription,
         destinationDescription: event.destinationDescription,
+      
+      ));
+      BitmapDescriptor pickUpDescriptor = await geolocatorUseCases.createMarker.run('assets/img/pickup.png', 40.0, 40.0);
+      BitmapDescriptor destinationDescriptor = await geolocatorUseCases.createMarker.run('assets/img/destination-2.png', 40.0, 40.0);
+      Marker markerPickUp = geolocatorUseCases.getMarker.run(
+        'pickup', 
+        state.pickUpPLatLng!.latitude,
+        state.pickUpPLatLng!.longitude,
+        pickUpDescriptor, 
+        'Lugar de recogida',
+        'Debes esperar a la recogida'
+        );
+     Marker markerDestination = geolocatorUseCases.getMarker.run(
+        'destination', 
+        state.destinationLatLng!.latitude,
+        state.destinationLatLng!.longitude,
+        destinationDescriptor, 
+        'Destino',
+        'listo llegamos'
+        );
+        emit(
+      state.copyWith(
+         markers: {
+              markerPickUp.markerId: markerPickUp,
+              markerDestination.markerId: markerDestination,
+            },
       ));
    });
 
@@ -71,6 +97,12 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
   
   });
 
+   on<ToggleBottomSheetEvent>((event, emit) {
+    emit(
+      state.copyWith(
+        isBottomSheetExpanded: event.isBottomSheetExpanded
+        ));
+    });
 
   }
  

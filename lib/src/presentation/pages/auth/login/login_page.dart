@@ -40,8 +40,11 @@ class _LoginPageState extends State<LoginPage> {
                       print('Succes Data in login page: ${response.data}');
                       final authResponseModel = response.data as AuthResponseModel; // casteo la data de response.data
                       context.read<LoginBloc>().add( SaveUserSession ( authResponseModel: authResponseModel ) );
-                      
-                      Navigator.pushNamedAndRemoveUntil(context, 'client/home', (route) => false);
+                      if( authResponseModel.user.roles!.length > 1 ) {
+                        Navigator.pushNamedAndRemoveUntil(context, 'roles', (route) => false);
+                      } else{
+                        Navigator.pushNamedAndRemoveUntil(context, 'client/home', (route) => false);
+                      }
                   }
                 },
                 child: BlocBuilder<LoginBloc, LoginState>(
