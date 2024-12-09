@@ -3,6 +3,7 @@ import 'package:hey_taxi_app/src/domain/usecase/geolocator/findmyposition_usecas
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/get_marker_usecase.dart';
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/get_placemark_data_usecase.dart';
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/get_polyline_usecase.dart';
+import 'package:hey_taxi_app/src/domain/usecase/geolocator/get_position_stream_usecase.dart';
 
 class GeolocatorUseCases {
   
@@ -11,6 +12,7 @@ class GeolocatorUseCases {
   GetMarkerUseCase getMarker;
   GetPlacemarkDataUsecase getPlacemarkData;
   GetPolylineUseCase getPolyline;
+  GetPositionStreamUseCase getPositionStream;
   
   GeolocatorUseCases({
     required this.findMyPosition,
@@ -18,5 +20,6 @@ class GeolocatorUseCases {
     required this.getMarker,
     required this.getPlacemarkData,
     required this.getPolyline,
+    required this.getPositionStream,
   });
 }

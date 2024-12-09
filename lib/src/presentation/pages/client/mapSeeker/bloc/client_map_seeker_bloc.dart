@@ -60,7 +60,8 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
     });
 
    on<ChangeMapCameraPosition>((event, emit) async {
-  try {
+
+    try {
     GoogleMapController googleMapController = await state.controller!.future;
     final newCameraPosition = CameraPosition(
       target: LatLng(event.lat, event.lng),
@@ -112,6 +113,25 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
       isUpdateStatedestinatio: event.isUpdateStatedestinatio
       ));
   });
+
+  on<OnFocusTextField>((event, emit) async  {
+    print("Evento OnFocusTextField recibido");
+    emit(state.copyWith(shouldExpandSheet: true));
+
+    //  // Restablece el estado después de un breve tiempo para permitir futuras expansiones
+    // await Future.delayed(const Duration(milliseconds: 500), ()  {
+    // print('Evento OnFocusTextField: Restableciendo el estado');
+    // emit(state.copyWith(shouldExpandSheet: false));
+    // });
+
+  });
+
+  on<ResetExpandSheetEvent>((event, emit) {
+  emit(state.copyWith(shouldExpandSheet: false));
+});
+ 
+
+ 
 
   }
  

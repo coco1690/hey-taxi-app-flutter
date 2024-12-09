@@ -54,9 +54,11 @@ Widget _headerProfile(BuildContext context){
           height: MediaQuery.of(context).size.height * 0.3,
           width:  MediaQuery.of(context).size.width,
           decoration:const BoxDecoration(
-            color: Color.fromARGB(255, 243, 159, 90,)
+            color: Color.fromARGB(255, 229, 244, 19),
+            // color: Color.fromARGB(255, 192, 8, 8),
+            // color: Color.fromARGB(255, 243, 159, 90,)
          ),
-          child: const Text('PERFIL DE USUARIO', style: TextStyle( color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+          child: const Text('PERFIL DE USUARIO', style: TextStyle( color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),),
         ),
       ],
     );
@@ -68,7 +70,9 @@ Widget _cardInfoUser( BuildContext context, User? user, ){
     width: MediaQuery.of(context).size.width,
     height: 260,
     child: Card(
-      color:const Color.fromARGB(255, 56,	67,	88),
+      elevation: 10,
+      color:const Color.fromARGB(255, 255, 252, 249),
+      // color:const Color.fromARGB(255, 56,	67,	88),
       child: Column(
         children: [
           Container(
@@ -95,9 +99,9 @@ Widget _cardInfoUser( BuildContext context, User? user, ){
             ),
           ),
         
-          Text( user?.name ??  '', style: const TextStyle( color: Colors.white54) ),
-          Text( user?.email ?? '', style: const TextStyle( color: Colors.white54) ),
-          Text( user?.phone ?? '', style: const TextStyle( color: Colors.white54) ),
+          Text( user?.name ??  '', style: const TextStyle( color: Colors.black45) ),
+          Text( user?.email ?? '', style: const TextStyle( color: Colors.black45) ),
+          Text( user?.phone ?? '', style: const TextStyle( color: Colors.black45) ),
       
         ],
       ),

@@ -73,8 +73,17 @@ Widget _headerProfile(BuildContext context){
           height: MediaQuery.of(context).size.height * 0.35,
           width:  MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
-            
-            color: Color.fromARGB(255, 243, 159, 90,),
+            //  gradient: LinearGradient(
+            //     begin: Alignment.topRight,
+            //     end: Alignment.bottomLeft,
+            //     colors: [
+            //        Color.fromARGB(255, 236, 12, 12),
+            //        Color.fromARGB(255, 73, 6, 6),
+            //     ],
+            //   )
+             color: Color.fromARGB(255, 229, 244, 19),
+            // color: Color.fromARGB(255, 192, 8, 8),
+            // color: Color.fromARGB(255, 243, 159, 90,),
          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -86,14 +95,14 @@ Widget _headerProfile(BuildContext context){
                     Navigator.pop(context);
                   }, 
                     icon: const Icon(Icons.arrow_back_ios_new_rounded), 
-                    color: const Color.fromARGB(255,	237,	227,	213,), 
+                    color: Colors.black,
                     iconSize: 30,
                   )
                 ),
                
                Container(
                 margin: const EdgeInsets.only( left: 50 ),
-                child: const Text('EDITAR PERFIL', style:TextStyle( color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20))),
+                child: const Text('EDITAR PERFIL', style:TextStyle( color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20))),
             ],
           ),
         ),    
@@ -107,7 +116,8 @@ Widget _cardInfoUser( BuildContext context, User? user, ProfileUpdateState state
     width: MediaQuery.of(context).size.width,
     height: 360,
     child: Card(
-      color: const Color.fromARGB(255, 56,	67,	88),
+      elevation: 10,
+      color: const Color.fromARGB(255, 255, 252, 249),
       child: Column(
         children: [
           Stack(
@@ -166,7 +176,7 @@ Widget _cardInfoUser( BuildContext context, User? user, ProfileUpdateState state
                 ),
           ),
         
-          Text( user?.email ?? '', style: const TextStyle( color: Colors.white54) ),
+          Text( user?.email ?? '', style: const TextStyle( color: Colors.black45) ),
           
           Container(
               width: 170,

@@ -13,6 +13,7 @@ import 'package:hey_taxi_app/src/presentation/pages/profile/info/bloc/index.dart
 import 'package:hey_taxi_app/src/presentation/pages/profile/update/bloc/index.dart';
 import 'package:hey_taxi_app/src/presentation/pages/roles/bloc/roles_bloc.dart';
 import 'package:hey_taxi_app/src/presentation/pages/roles/bloc/roles_event.dart';
+import 'src/domain/usecase/socket/socket_usecases.dart';
 import 'src/presentation/pages/auth/register/bloc/register_bloc.dart';
 import 'src/presentation/pages/auth/register/bloc/register_event.dart';
 import 'src/presentation/pages/client/mapBookingInfo/bloc/index.dart';
@@ -31,7 +32,7 @@ List<BlocProvider> blocProvider = [
   BlocProvider<ProfileInfoBloc>          (create: (context) => ProfileInfoBloc          ( locator<AuthUseCases>())..add(GetUserInfo())),
   BlocProvider<ProfileUpdateBloc>        (create: (context) => ProfileUpdateBloc        ( locator<UserUseCases>(), locator<AuthUseCases>())),
   BlocProvider<ClientMapSeekerBloc>      (create: (context) => ClientMapSeekerBloc      ( locator<GeolocatorUseCases>())),
-  BlocProvider<DriverMapLocationBloc>    (create: (context) => DriverMapLocationBloc    ( locator<GeolocatorUseCases>())),
+  BlocProvider<DriverMapLocationBloc>    (create: (context) => DriverMapLocationBloc    ( locator<GeolocatorUseCases>(), locator<SocketUseCases>())),
   BlocProvider<ClientDestinationMapBloc> (create: (context) => ClientDestinationMapBloc ( locator<GeolocatorUseCases>())),
   BlocProvider<ClientMapBookingInfoBloc> (create: (context) => ClientMapBookingInfoBloc ( locator<GeolocatorUseCases>())),
 

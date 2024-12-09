@@ -31,7 +31,7 @@ class DefaultTextFieldUpdate extends StatelessWidget {
           initialValue: initialValue,
           textAlign: TextAlign.center,
           style:
-              const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
           obscureText: obscureText,
           onChanged: (text) {
             onChanged(text);

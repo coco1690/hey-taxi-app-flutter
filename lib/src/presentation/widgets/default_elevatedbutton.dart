@@ -4,7 +4,7 @@ class DefaultElevatedButton extends StatelessWidget {
 
   final String text;
   final void Function()? onPressed;
-  final Color colorFondo;
+  final Color? colorFondo;
   final Color colorLetra;
 
   const DefaultElevatedButton({
@@ -12,7 +12,7 @@ class DefaultElevatedButton extends StatelessWidget {
   super.key,
   required this.text, 
   required this.onPressed, 
-  required this.colorFondo,
+  this.colorFondo,
   required this.colorLetra,
   });
 

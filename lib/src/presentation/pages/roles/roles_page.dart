@@ -27,8 +27,10 @@ class _RolesPageState extends State<RolesPage> {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
                 colors: [
-                   Color.fromARGB(255, 243, 159, 90),
-                   Color.fromARGB(255, 114, 62, 19),
+                  //  Color.fromARGB(255, 229, 244, 19),
+                  //  Color.fromARGB(255, 237, 245, 176),
+                     Color.fromARGB(255, 24, 23, 23),
+                     Color.fromARGB(255, 18, 18, 18),
                 ],
               )
             ),

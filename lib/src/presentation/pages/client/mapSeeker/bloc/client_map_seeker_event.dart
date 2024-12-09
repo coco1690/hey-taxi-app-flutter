@@ -43,3 +43,6 @@ class OnUpdateStatedestinatio extends ClientMapSeekerEvent {
   OnUpdateStatedestinatio({required this.isUpdateStatedestinatio});
 }
 
+class OnFocusTextField extends ClientMapSeekerEvent {}
+
+class ResetExpandSheetEvent extends ClientMapSeekerEvent {}

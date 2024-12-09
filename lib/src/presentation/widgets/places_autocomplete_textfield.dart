@@ -3,40 +3,46 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:hey_taxi_app/src/data/api/api_config.dart';
 
+
 class PleacesAutocompleteTextfield extends StatelessWidget {
   final TextEditingController controller;
-  // final String hintText;
   final String label;
   final Function(Prediction)? onPlaceSelected;
   final IconData? icon;
+  final FocusNode? focusNode; // NUEVO
 
-  const PleacesAutocompleteTextfield({super.key, required this.controller, required this.onPlaceSelected, this.icon, required this.label});
+  const PleacesAutocompleteTextfield({
+    super.key,
+    required this.controller,
+    required this.onPlaceSelected,
+    this.icon,
+    required this.label,
+    this.focusNode, // NUEVO
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       height: MediaQuery.of(context).size.height * 0.060,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: GooglePlaceAutoCompleteTextField(
+        textStyle: const TextStyle( color: Colors.white),
         textEditingController: controller,
         googleAPIKey: ApiConfig.API_GOOGLE_MAPS,
-        debounceTime: 1000, 
+        debounceTime: 1000,
+        focusNode: focusNode, // ASIGNAMOS EL FOCUS NODE
         boxDecoration: BoxDecoration(
-          color: const Color.fromARGB(255,	237,	227,	213,),
+          color:const Color.fromARGB(255, 44, 47, 55),
           borderRadius: BorderRadius.circular(10),
         ),
         inputDecoration: InputDecoration(
-          // hintText: hintText,
-          label: Text( label,  style:  const TextStyle( color: Colors.black54)),
-          // prefixIcon: Icon(icon, color: Colors.amber,),
+
+          icon: const Icon(Icons.location_on, color: Colors.white),
+          label: Text(label, style: const TextStyle(fontSize: 20, color: Colors.white30)),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
-          //  focusedBorder: const UnderlineInputBorder(
-          //  borderSide: BorderSide(color: Colors.black26),
-          // )
+          // contentPadding: EdgeInsets.only( left: 10)
         ),
         countries: const ["co"],
         isLatLngRequired: true,
@@ -61,7 +67,7 @@ class PleacesAutocompleteTextfield extends StatelessWidget {
                 Expanded(child: Text(prediction.description ?? "")),
               ],
             ),
-          ); 
+          );
         },
         isCrossBtnShown: true,
       ),

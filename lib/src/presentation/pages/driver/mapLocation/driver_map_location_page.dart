@@ -12,15 +12,22 @@ class DriverMapLocationPage extends StatefulWidget {
   State<DriverMapLocationPage> createState() => _DriverMapLocationPageState();
 }
 class _DriverMapLocationPageState extends State<DriverMapLocationPage> {
+  late DriverMapLocationBloc _bloc;
   
-  @override
+   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<DriverMapLocationBloc>().add(DriverMapLocationInitEvent());
-      context.read<DriverMapLocationBloc>().add(FindMyPosition());
+    _bloc = context.read<DriverMapLocationBloc>();
+    _bloc.add(DriverMapLocationInitEvent());
+    _bloc.add(ConnectSocketIo());
+    _bloc.add(FindMyPosition());
+  }
 
-    });
+  @override
+  void dispose() {
+    _bloc.add(StopLocation());
+    _bloc.add(DisconnectSocketIo());
+    super.dispose();
   }
 
   @override

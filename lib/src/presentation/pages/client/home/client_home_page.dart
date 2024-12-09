@@ -19,7 +19,7 @@ class ClientHomePage extends StatefulWidget {
 }
 
 class _ClientHomePageState extends State<ClientHomePage> {
-
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Widget> pageList = <Widget>[
     const ClientMapSeekerPage(),
@@ -36,13 +36,34 @@ class _ClientHomePageState extends State<ClientHomePage> {
    final ClientHomeBloc clientHomeBloc = context.read<ClientHomeBloc>();
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor:const Color.fromARGB(255, 243, 159, 90,),
-        foregroundColor: const Color.fromARGB(255,	237,	227,	213,),
-      ),
+       key: _scaffoldKey,
+      // appBar: AppBar(
+      //   // backgroundColor:const Color.fromARGB(255, 243, 159, 90,),
+      //   // backgroundColor:const Color.fromARGB(255, 192, 8, 8),
+      //   // backgroundColor:const Color.fromARGB(255, 229, 244, 19),
+      //   backgroundColor:const Color.fromARGB(251, 13, 13, 13),
+      //   foregroundColor: const Color.fromARGB(255, 230, 254,83),
+       
+      // ),
       body: BlocBuilder<ClientHomeBloc, ClientHomeState>(
         builder: (context, state) {
-          return pageList[ state.pageIdex ];
+          return Stack(
+            children: [
+
+            pageList[ state.pageIdex ],
+             Positioned(
+                  top: 60,
+                  left: 5,
+                  child: IconButton(
+                    icon: const Icon(Icons.menu),
+                    color: const Color.fromARGB(255, 230, 254, 83),
+                    onPressed: () {
+                      _scaffoldKey.currentState!.openDrawer();
+                    },
+                  ),
+                ),
+            ]
+         );
         },
       ),
       drawer: BlocBuilder<ClientHomeBloc, ClientHomeState>(
@@ -59,8 +80,13 @@ class _ClientHomePageState extends State<ClientHomePage> {
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
                       colors: [
-                        Color.fromARGB(255, 243, 159, 90),
-                        Color.fromARGB(255, 114, 62, 19),
+                          // Color.fromARGB(255, 236, 12, 12),
+                          // Color.fromARGB(255, 73, 6, 6),
+                          // Color.fromARGB(255, 238, 255, 5),
+                          // Color.fromARGB(255, 144, 154, 3),
+                          Color.fromARGB(255, 19, 19, 19),
+                          Color.fromARGB(255, 18, 18, 18),
+                          // Color.fromARGB(255, 237, 245, 176),
                       ],
                     ),
                   ),
@@ -136,7 +162,7 @@ class _ClientHomePageState extends State<ClientHomePage> {
         ),
          subtitle: Text( 
           role?.id ?? 'CLIENTE',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color.fromARGB(255, 210, 234, 52)),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color:  Color.fromARGB(255, 172, 234, 3)),
          ),
         selected: state.pageIdex == 1, // agg el primer valor
         onTap: () {
@@ -188,3 +214,5 @@ class _ClientHomePageState extends State<ClientHomePage> {
 
 
 
+//  Color.fromARGB(255, 243, 159, 90),
+//                         Color.fromARGB(255, 114, 62, 19),

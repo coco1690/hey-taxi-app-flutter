@@ -53,6 +53,7 @@ dependencies:
   flutter_polyline_points: ^2.1.0
   cached_network_image: ^3.2.3
   flutter_cache_manager: ^3.3.0
+  socket_io_client: ^3.0.2
 
  
  

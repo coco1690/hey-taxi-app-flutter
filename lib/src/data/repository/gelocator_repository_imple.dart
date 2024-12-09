@@ -108,4 +108,19 @@ class GeolocatorRepositoryImpl implements GeolocatorRepository {
     }
     return polylineCoordinates;
   }
+  
+
+  // ACTUALIZA EL RECORRIDO EN EL MAPA
+  @override
+  Stream<Position> getPositionStream() {
+    LocationSettings locationSettings = const LocationSettings(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 1,
+    );
+
+    return Geolocator.getPositionStream( locationSettings: locationSettings );
+  }
+
+
+
 }

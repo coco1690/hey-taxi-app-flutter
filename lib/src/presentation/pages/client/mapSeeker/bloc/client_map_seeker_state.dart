@@ -18,6 +18,7 @@ class ClientMapSeekerState extends Equatable {
   final bool isButtonEnabled;
   final bool isUpdateStatedestinatio;
   final Map<MarkerId, Marker> markers;
+   final bool shouldExpandSheet;
 
   const ClientMapSeekerState({
     this.position,
@@ -31,6 +32,7 @@ class ClientMapSeekerState extends Equatable {
     this.isButtonEnabled = false,
     this.isUpdateStatedestinatio = true,
     this.markers = const <MarkerId, Marker>{},
+    this.shouldExpandSheet = false,
   });
 
   ClientMapSeekerState copyWith({
@@ -45,6 +47,8 @@ class ClientMapSeekerState extends Equatable {
     bool? isButtonEnabled,
     bool? isUpdateStatedestinatio,
     Map<MarkerId, Marker>? markers,
+    bool? shouldExpandSheet,
+    
 
   }) {
     return ClientMapSeekerState(
@@ -59,6 +63,7 @@ class ClientMapSeekerState extends Equatable {
       isButtonEnabled: isButtonEnabled ?? this.isButtonEnabled,
       isUpdateStatedestinatio: isUpdateStatedestinatio ?? this.isUpdateStatedestinatio,
       markers: markers ?? this.markers,
+      shouldExpandSheet: shouldExpandSheet ?? this.shouldExpandSheet,
     );
   }
 
@@ -75,7 +80,8 @@ class ClientMapSeekerState extends Equatable {
     pickUpDescription, 
     destinationDescription, 
     isButtonEnabled,
-    isUpdateStatedestinatio
+    isUpdateStatedestinatio,
+    shouldExpandSheet
     ];
 }
 
