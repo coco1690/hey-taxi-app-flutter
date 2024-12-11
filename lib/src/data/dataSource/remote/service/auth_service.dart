@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   
-   Future<Resource> login( String email, String password) async {
+   Future<Resource<AuthResponseModel>> login( String email, String password) async {
     try{
       
       Uri url = Uri.http( ApiConfig.API_HEY_TAXI, '/api/v1/auth/login');
@@ -43,7 +43,7 @@ class AuthService {
     }
    }
 
-   Future<Resource> register( User user ) async {
+   Future<Resource<AuthResponseModel>> register( User user ) async {
     try{
       
       Uri url = Uri.http( ApiConfig.API_HEY_TAXI, '/api/v1/auth/register');

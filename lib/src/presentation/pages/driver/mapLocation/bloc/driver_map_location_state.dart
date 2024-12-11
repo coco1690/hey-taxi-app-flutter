@@ -14,6 +14,7 @@ class DriverMapLocationState extends Equatable {
   final bool isUpdateStatedestinatio;
   final Map<MarkerId, Marker> markers;
   final Socket? socket;
+  final int? idDriver;
 
   const DriverMapLocationState({
     this.controller,
@@ -22,6 +23,7 @@ class DriverMapLocationState extends Equatable {
     this.isUpdateStatedestinatio = true,
     this.markers = const <MarkerId, Marker>{},
     this.socket,
+    this.idDriver,
     
   });
 
@@ -32,6 +34,7 @@ class DriverMapLocationState extends Equatable {
     bool? isUpdateStatedestinatio,
     Map<MarkerId, Marker>? markers, 
     Socket? socket,
+    int? idDriver,
 
   }) {
     
@@ -43,6 +46,7 @@ class DriverMapLocationState extends Equatable {
       isUpdateStatedestinatio: isUpdateStatedestinatio ?? this.isUpdateStatedestinatio,
       markers: markers ?? this.markers,
       socket: socket ?? this.socket,
+      idDriver: idDriver ?? this.idDriver,
     );
   }
 
@@ -54,7 +58,9 @@ class DriverMapLocationState extends Equatable {
     markers, 
     cameraPosition, 
     isUpdateStatedestinatio,
-    socket
+    socket,
+    idDriver,
+
     ];
 }
 

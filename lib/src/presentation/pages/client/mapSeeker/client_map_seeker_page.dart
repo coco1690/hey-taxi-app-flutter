@@ -13,6 +13,9 @@ class ClientMapSeekerPage extends StatefulWidget {
 }
 
 class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
+
+  late ClientMapSeekerBloc _bloc;
+
   TextEditingController destinationController = TextEditingController();
   TextEditingController pickUpController = TextEditingController();
 
@@ -27,20 +30,25 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
   @override
   void initState() {
     super.initState();
-
+    _bloc = context.read<ClientMapSeekerBloc>();
     // Escuchar cambios de foco en los TextFields
     pickUpFocusNode.addListener(_handleFocusChange);
     destinationFocusNode.addListener(_handleFocusChange);
 
     // Inicializar el mapa y buscar posición actual
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<ClientMapSeekerBloc>().add(ClientMapSeekerInitEvent());
-      context.read<ClientMapSeekerBloc>().add(FindMyPosition());
+      _bloc.add(ClientMapSeekerInitEvent());
+      _bloc.add(ConnectSocketIo());
+      print('CLIENT MAP SEEKER CONECTADO');
+      _bloc.add(FindMyPosition());
     });
   }
 
   @override
   void dispose() {
+
+    _bloc.add(DisconnectSocketIo());
+    print('CLIENT MAP SEEKER DESCONECTADO');
     // Liberar recursos de los FocusNodes
     pickUpFocusNode.dispose();
     destinationFocusNode.dispose();

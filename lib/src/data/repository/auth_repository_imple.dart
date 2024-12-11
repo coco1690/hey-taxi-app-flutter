@@ -15,13 +15,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
   // METODO PARA REALIZAR LOGIN 
   @override
-  Future<Resource> login(String email, String password) {
+  Future<Resource<AuthResponseModel>> login(String email, String password) async {
     return authService.login(email, password);
   }
 
   // METODO PARA REGISTAR UN USUARIO
   @override
-  Future<Resource> register(User user) {
+  Future<Resource<AuthResponseModel>> register(User user) async {
     return authService.register(user);
   }
 

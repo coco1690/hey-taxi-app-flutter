@@ -46,3 +46,26 @@ class OnUpdateStatedestinatio extends ClientMapSeekerEvent {
 class OnFocusTextField extends ClientMapSeekerEvent {}
 
 class ResetExpandSheetEvent extends ClientMapSeekerEvent {}
+
+class ConnectSocketIo extends ClientMapSeekerEvent {}
+
+class DisconnectSocketIo extends ClientMapSeekerEvent {}
+
+class ListenDriversPositionSocketIo extends ClientMapSeekerEvent {}
+
+class ListenDriverDisconnectedSocketIo extends ClientMapSeekerEvent{}
+
+class RemoveDriverPositionMarker extends ClientMapSeekerEvent{
+  final String idSocket;
+
+  RemoveDriverPositionMarker({ required this.idSocket});
+}
+class AddDriverPositionMarker extends ClientMapSeekerEvent{
+  final String idSocket;
+  final int    idDriver;
+  final double lat;
+  final double lng;
+  
+  AddDriverPositionMarker({required this.idSocket, required this.idDriver, required this.lat, required this.lng});
+}
+

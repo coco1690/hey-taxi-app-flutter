@@ -20,13 +20,16 @@ class _DriverMapLocationPageState extends State<DriverMapLocationPage> {
     _bloc = context.read<DriverMapLocationBloc>();
     _bloc.add(DriverMapLocationInitEvent());
     _bloc.add(ConnectSocketIo());
+    print('DRIVER CONECTADO');
     _bloc.add(FindMyPosition());
+    print('DRIVER EN POSICION');
   }
 
   @override
   void dispose() {
     _bloc.add(StopLocation());
     _bloc.add(DisconnectSocketIo());
+    print('DRIVER DESCONECTADO');
     super.dispose();
   }
 

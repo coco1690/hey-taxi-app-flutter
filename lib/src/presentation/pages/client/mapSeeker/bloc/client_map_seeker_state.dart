@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hey_taxi_app/src/domain/models/placemark_data.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 
 class ClientMapSeekerState extends Equatable {
@@ -18,7 +19,9 @@ class ClientMapSeekerState extends Equatable {
   final bool isButtonEnabled;
   final bool isUpdateStatedestinatio;
   final Map<MarkerId, Marker> markers;
-   final bool shouldExpandSheet;
+  final bool shouldExpandSheet;
+  final Socket? socket;
+
 
   const ClientMapSeekerState({
     this.position,
@@ -33,6 +36,8 @@ class ClientMapSeekerState extends Equatable {
     this.isUpdateStatedestinatio = true,
     this.markers = const <MarkerId, Marker>{},
     this.shouldExpandSheet = false,
+    this.socket,
+
   });
 
   ClientMapSeekerState copyWith({
@@ -48,6 +53,7 @@ class ClientMapSeekerState extends Equatable {
     bool? isUpdateStatedestinatio,
     Map<MarkerId, Marker>? markers,
     bool? shouldExpandSheet,
+    Socket? socket,
     
 
   }) {
@@ -64,6 +70,7 @@ class ClientMapSeekerState extends Equatable {
       isUpdateStatedestinatio: isUpdateStatedestinatio ?? this.isUpdateStatedestinatio,
       markers: markers ?? this.markers,
       shouldExpandSheet: shouldExpandSheet ?? this.shouldExpandSheet,
+      socket: socket ?? this.socket,
     );
   }
 
@@ -81,7 +88,9 @@ class ClientMapSeekerState extends Equatable {
     destinationDescription, 
     isButtonEnabled,
     isUpdateStatedestinatio,
-    shouldExpandSheet
+    shouldExpandSheet,
+    socket
+
     ];
 }
 
