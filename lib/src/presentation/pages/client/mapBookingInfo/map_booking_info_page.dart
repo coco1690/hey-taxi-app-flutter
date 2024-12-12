@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/src/domain/models/time_and_distance_values.dart';
+import 'package:hey_taxi_app/src/domain/utils/resource.dart';
 import 'package:hey_taxi_app/src/presentation/pages/client/mapBookingInfo/map_booking_info_content.dart';
 
 import 'bloc/index.dart';
@@ -31,6 +33,7 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
         pickUpDescription: pickUpDescription!, 
         destinationDescription: destinationDescription!
       ));
+      context.read<ClientMapBookingInfoBloc>().add(GetTimeAndDistanceValues());
       context.read<ClientMapBookingInfoBloc>().add(AddPolyline());
       context.read<ClientMapBookingInfoBloc>().add(ChangeMapCameraPositionMapBookingInfo( 
         lat: pickUpLatlng!.latitude, 
@@ -57,7 +60,19 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
     return Scaffold(
       body: BlocBuilder<ClientMapBookingInfoBloc, ClientMapBookingInfoState>(
         builder: (context, state) {
-          return ClientMapBookingInfoContent(  state: state, arguments: arguments);
+         final responseTimeAndDistance = state.responseTimeAndDistance;
+
+          if (responseTimeAndDistance is Loading) { 
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          else if (responseTimeAndDistance is Succes) { 
+            TimeAndDistanceValues timeAndDistanceValues = responseTimeAndDistance.data as TimeAndDistanceValues;
+            return ClientMapBookingInfoContent(  state: state, timeAndDistanceValues: timeAndDistanceValues);
+          }
+          return Container();
         },
       ),
     );

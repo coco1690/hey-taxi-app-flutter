@@ -49,6 +49,7 @@ class DriverMapLocationContent extends StatelessWidget {
        if (state.controller != null) {
             if (!state.controller!.isCompleted) {
               state.controller?.complete(controller);
+              
             }
           }
         },

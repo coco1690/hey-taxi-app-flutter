@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/src/domain/models/time_and_distance_values.dart';
+import 'package:hey_taxi_app/src/domain/usecase/client-request/client_request_usecases.dart';
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/geolocator_usecases.dart';
+import 'package:hey_taxi_app/src/domain/utils/resource.dart';
 import 'index.dart';
 
 
@@ -12,7 +15,9 @@ import 'index.dart';
 class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMapBookingInfoState> {
     
   GeolocatorUseCases geolocatorUseCases;
-  ClientMapBookingInfoBloc(this.geolocatorUseCases) : super(const ClientMapBookingInfoState()){
+  ClientRequestUseCases clientRequestUseCases;
+
+  ClientMapBookingInfoBloc(this.geolocatorUseCases, this.clientRequestUseCases) : super(const ClientMapBookingInfoState()){
     
 
    on<ClientMapBookingInfoInitEvent>((event, emit) async {
@@ -104,7 +109,23 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
         isBottomSheetExpanded: event.isBottomSheetExpanded
         ));
     });
-
+   
+   on<GetTimeAndDistanceValues>((event, emit) async {
+    emit(
+      state.copyWith(
+        responseTimeAndDistance: Loading()
+        ));
+    Resource<TimeAndDistanceValues> timeAndDistanceValues = await clientRequestUseCases.getTimeAndDistanceClientRequest.run(
+      state.pickUpPLatLng!.latitude, 
+      state.pickUpPLatLng!.longitude, 
+      state.destinationLatLng!.latitude, 
+      state.destinationLatLng!.longitude
+    );
+    emit(
+      state.copyWith(
+        responseTimeAndDistance: timeAndDistanceValues
+        ));
+    });
   }
  
 }

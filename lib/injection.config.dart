@@ -11,11 +11,15 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:hey_taxi_app/src/data/dataSource/local/sharef_pref.dart'
     as _i61;
+import 'package:hey_taxi_app/src/data/dataSource/remote/service/client_request_service.dart'
+    as _i977;
 import 'package:hey_taxi_app/src/data/dataSource/remote/service/index.dart'
     as _i618;
 import 'package:hey_taxi_app/src/di/app_module.dart' as _i422;
 import 'package:hey_taxi_app/src/domain/repository/index.dart' as _i195;
 import 'package:hey_taxi_app/src/domain/usecase/auth/index.dart' as _i1069;
+import 'package:hey_taxi_app/src/domain/usecase/client-request/index.dart'
+    as _i361;
 import 'package:hey_taxi_app/src/domain/usecase/driver_position/index.dart'
     as _i108;
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/index.dart' as _i59;
@@ -45,6 +49,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i618.UsersService>(() => appModule.usersService);
     gh.factory<_i618.DriverPositionService>(
         () => appModule.driverPositionService);
+    gh.factory<_i977.ClientRequestService>(
+        () => appModule.clientRequestService);
     gh.factory<_i195.AuthRepository>(() => appModule.authRepository);
     gh.factory<_i195.UsersRepository>(() => appModule.usersRepository);
     gh.factory<_i195.SocketRepository>(() => appModule.socketRepository);
@@ -52,12 +58,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => appModule.geolocatorRepository);
     gh.factory<_i195.DriverPositionRepository>(
         () => appModule.driverPositionRepository);
+    gh.factory<_i195.ClientRequestRepository>(
+        () => appModule.clientRequestRepository);
     gh.factory<_i1069.AuthUseCases>(() => appModule.authUseCases);
     gh.factory<_i464.UserUseCases>(() => appModule.userUseCases);
     gh.factory<_i59.GeolocatorUseCases>(() => appModule.geolocatorUseCases);
     gh.factory<_i423.SocketUseCases>(() => appModule.socketUseCases);
     gh.factory<_i108.DriverPositionUseCases>(
         () => appModule.driverPositionUseCases);
+    gh.factory<_i361.ClientRequestUseCases>(
+        () => appModule.clientRequestUseCases);
     return this;
   }
 }

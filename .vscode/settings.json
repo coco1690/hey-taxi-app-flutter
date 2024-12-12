@@ -1,5 +1,6 @@
 {
-    "dart.flutterSdkPath": "~/Development/flutter"
+    "dart.flutterSdkPath": 
+    "~/Development/flutter",
     //  "editor.tokenColorCustomizations": {
     //     "comments": "#b8b8b8",
     //     "strings": "#049f09",

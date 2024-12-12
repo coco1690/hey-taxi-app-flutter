@@ -1,3 +1,5 @@
+import 'package:hey_taxi_app/src/data/dataSource/remote/service/client_request_service.dart';
+import 'package:hey_taxi_app/src/data/repository/client_request_repository_imple.dart';
 import 'package:injectable/injectable.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -15,6 +17,7 @@ import '../data/dataSource/remote/service/index.dart';
 import '../data/repository/index.dart';
 import '../domain/repository/index.dart';
 import '../domain/usecase/auth/index.dart';
+import '../domain/usecase/client-request/index.dart';
 import '../domain/usecase/driver_position/index.dart';
 import '../domain/usecase/geolocator/index.dart';
 
@@ -58,6 +61,8 @@ abstract class AppModule{
   @injectable
   DriverPositionService get driverPositionService => DriverPositionService();
 
+  @injectable
+  ClientRequestService get clientRequestService => ClientRequestService();
 
 
 
@@ -78,6 +83,9 @@ abstract class AppModule{
 
   @injectable
   DriverPositionRepository get driverPositionRepository => DriverPositionRepositoryImple( driverPositionService );
+
+  @injectable
+  ClientRequestRepository get clientRequestRepository => ClientRequestRepositoryImple( clientRequestService );
 
 
 
@@ -120,5 +128,10 @@ abstract class AppModule{
     DriverPositionUseCases get driverPositionUseCases => DriverPositionUseCases(
       createDriverPosition: CreateDriverPositionUseCase(driverPositionRepository),
       deleteDriverPosition: DeleteDriverPositionUseCase(driverPositionRepository)
+    );
+
+    @injectable
+    ClientRequestUseCases get clientRequestUseCases => ClientRequestUseCases(
+      getTimeAndDistanceClientRequest: GetTimeAndDistanceClientRequestUseCase(clientRequestRepository)
     );
 }

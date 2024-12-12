@@ -32,5 +32,7 @@ class ToggleBottomSheetEvent extends ClientMapBookingInfoEvent{
   ToggleBottomSheetEvent({required this.isBottomSheetExpanded});
 }
 
+class GetTimeAndDistanceValues extends ClientMapBookingInfoEvent {}
+
 
 

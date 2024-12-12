@@ -2,7 +2,7 @@
 
 abstract class Resource<T> {}
 
-class Loading   extends Resource {}
+class Loading  extends Resource {}
 
 class Succes<T> extends Resource<T> {
   final T data;

@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/src/domain/models/time_and_distance_values.dart';
 import 'package:hey_taxi_app/src/presentation/widgets/default_elevatedbutton.dart';
 import 'bloc/index.dart';
 
 class ClientMapBookingInfoContent extends StatelessWidget {
   final ClientMapBookingInfoState state;
-  final Map<String, dynamic> arguments;
+  final TimeAndDistanceValues timeAndDistanceValues;
+  // final Map<String, dynamic> arguments;
 
   const ClientMapBookingInfoContent(
-      {super.key, required this.state, required this.arguments});
+      {super.key, required this.state, required this.timeAndDistanceValues});
 
   @override
   Widget build(BuildContext context) {
+    
     return Stack(
       children: [
         _googleMaps(context, state),
-        _draggableCardBookingInfo(context, arguments),
+        _draggableCardBookingInfo(context, timeAndDistanceValues),
         Positioned(
           bottom: 25,
           right: 15,
@@ -50,9 +53,12 @@ class ClientMapBookingInfoContent extends StatelessWidget {
     );
   }
 
-  Widget _draggableCardBookingInfo(BuildContext context, arguments) {
-    final String pickUpDescription = arguments['pickUpDescription'];
-    final String destinationDescription = arguments['destinationDescription'];
+  Widget _draggableCardBookingInfo(BuildContext context, TimeAndDistanceValues timeAndDistanceValues) {
+    
+    String distance = timeAndDistanceValues.distance.text;
+    String duration = timeAndDistanceValues.duration.text;
+    double recommendedValue = timeAndDistanceValues.recommendedValue;
+    int    roundedRecomendedValue = recommendedValue.round();
 
     return BlocBuilder<ClientMapBookingInfoBloc, ClientMapBookingInfoState>(
       builder: (context, state) {
@@ -87,28 +93,28 @@ class ClientMapBookingInfoContent extends StatelessWidget {
                     )
                   ),
                   ListTile(
-                    title: const Text('Recoger en'),
-                    subtitle: Text(pickUpDescription,
+                    title: const Text('Origen'),
+                    subtitle: Text(state.pickUpDescription,
                         style: const TextStyle(color: Colors.black38)),
                     leading: const Icon(Icons.location_on),
                   ),
                   ListTile(
                     title: const Text('Destino'),
-                    subtitle: Text(destinationDescription,
+                    subtitle: Text( state.destinationDescription,
                         style: const TextStyle(color: Colors.black38)),
                     leading: const Icon(Icons.my_location_rounded),
                   ),
-                  const ListTile(
-                    title: Text('Tiempo y distancia'),
-                    subtitle: Text('12:00 PM',
-                        style: TextStyle(color: Colors.black38)),
-                    leading: Icon(Icons.timer_sharp),
+                   ListTile(
+                    title: const  Text('Tiempo y distancia'),
+                    subtitle: Text('$duration - $distance ',
+                        style: const  TextStyle(color: Colors.black38)),
+                    leading: const Icon(Icons.timer_sharp),
                   ),
-                  const ListTile(
-                    title: Text('Precio aproximado del viaje'),
-                    subtitle: Text('19.1 - 25.51 €',
-                        style: TextStyle(color: Colors.black38)),
-                    leading: Icon(Icons.attach_money),
+                   ListTile(
+                    title: const Text('Precio aproximado del viaje'),
+                    subtitle: Text( '\$ ${roundedRecomendedValue.toString()}',
+                        style: const TextStyle(color: Colors.black38)),
+                    leading: const  Icon(Icons.attach_money),
                   ),
                   DefaultElevatedButton(
                     text: 'SOLICITAR TAXISTA',
