@@ -18,6 +18,7 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
 
   TextEditingController destinationController = TextEditingController();
   TextEditingController pickUpController = TextEditingController();
+  final ValueNotifier<String> pickUpNotifier = ValueNotifier<String>('');
 
   // Controladores de foco
   final FocusNode pickUpFocusNode = FocusNode();
@@ -38,6 +39,8 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
     // Inicializar el mapa y buscar posición actual
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _bloc.add(ClientMapSeekerInitEvent());
+      _bloc.add(ListenDriversPositionSocketIo());
+      _bloc.add(ListenDriverDisconnectedSocketIo());
       _bloc.add(ConnectSocketIo());
       print('CLIENT MAP SEEKER CONECTADO');
       _bloc.add(FindMyPosition());
@@ -81,6 +84,7 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
             pickUpFocusNode: pickUpFocusNode,
             destinationFocusNode: destinationFocusNode,
             draggableController: draggableController,
+            pickUpNotifier: pickUpNotifier,
           );
         },
       ),

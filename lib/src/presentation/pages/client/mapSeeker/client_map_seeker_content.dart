@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker_bloc.dart';
 import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker_event.dart';
+import 'package:hey_taxi_app/src/presentation/widgets/default_button_animation.dart';
 import 'package:hey_taxi_app/src/presentation/widgets/default_elevatedbutton.dart';
 import 'package:hey_taxi_app/src/presentation/widgets/places_autocomplete_textfield.dart';
 
@@ -15,6 +16,7 @@ class ClientMapSeekerContent extends StatelessWidget {
   final FocusNode pickUpFocusNode;
   final FocusNode destinationFocusNode;
   final DraggableScrollableController draggableController;
+  final ValueNotifier<String> pickUpNotifier;
 
   const ClientMapSeekerContent(
     this.state, {
@@ -24,6 +26,7 @@ class ClientMapSeekerContent extends StatelessWidget {
     required this.pickUpFocusNode,
     required this.destinationFocusNode,
     required this.draggableController,
+    required this.pickUpNotifier,
   });
 
   @override
@@ -34,22 +37,21 @@ class ClientMapSeekerContent extends StatelessWidget {
         _iconMyLocation(context),
 
         // BlocListener para manejar la expansión de la hoja
-    BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
-     listenWhen: (previous, current) =>
-        previous.shouldExpandSheet != current.shouldExpandSheet,
-      listener: (context, state) {
-        if (state.shouldExpandSheet) {
-         draggableController.animateTo(
-          0.85,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-          );
-          // Dispara evento para reiniciar el foco
-          context.read<ClientMapSeekerBloc>().add(ResetExpandSheetEvent());
-        }
-       },
-       
-    child: _cardAddressDestination(context),
+        BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
+          listenWhen: (previous, current) =>
+              previous.shouldExpandSheet != current.shouldExpandSheet,
+          listener: (context, state) {
+            if (state.shouldExpandSheet) {
+              draggableController.animateTo(
+                0.85,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+              // Dispara evento para reiniciar el foco
+              context.read<ClientMapSeekerBloc>().add(ResetExpandSheetEvent());
+            }
+          },
+          child: _cardAddressDestination(context),
         ),
       ],
     );
@@ -58,38 +60,49 @@ class ClientMapSeekerContent extends StatelessWidget {
 // ############ WIDGETS ############
 
   Widget _googleMaps(BuildContext context, ClientMapSeekerState state) {
-    return GoogleMap(
-      mapType: MapType.normal,
-      initialCameraPosition: state.cameraPosition,
-      markers: Set<Marker>.of(state.markers.values),
-      onCameraMove: (CameraPosition cameraPosition) {
-        context
-            .read<ClientMapSeekerBloc>()
-            .add(OnCameraMove(cameraPosition: cameraPosition));
+    return BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
+      listenWhen: (previous, current) =>
+              previous.placemarkData?.address != current.placemarkData?.address,
+      listener: (context, state) {
+      print('LISTEN WHEN ${state.placemarkData?.address}');
+      pickUpController.text =  state.placemarkData?.address ?? '';
+        // TODO: implement listener
+         if (state.placemarkData != null) {                 
+          context
+                .read<ClientMapSeekerBloc>()
+                .add(OnGoogleAutocompletepickUpSelected(
+                  lat: state.placemarkData!.lat,
+                  lng: state.placemarkData!.lng,
+                  pickUpDescription: state.placemarkData!.address,
+                ));  
+         }
       },
-      onCameraIdle: () async {
-        context.read<ClientMapSeekerBloc>().add(OnCameraIdle());
-        pickUpController.text = state.placemarkData?.address ?? '';
-        print('pickUpController: ${state.placemarkData?.address}');
-        if (state.placemarkData != null) {
+      child: GoogleMap(
+        mapType: MapType.normal,
+        initialCameraPosition: state.cameraPosition,
+        markers: Set<Marker>.of(state.markers.values),
+        onCameraMove: (CameraPosition cameraPosition) {
           context
               .read<ClientMapSeekerBloc>()
-              .add(OnGoogleAutocompletepickUpSelected(
-                lat: state.placemarkData!.lat,
-                lng: state.placemarkData!.lng,
-                pickUpDescription: state.placemarkData!.address,
-              ));
-        }
-      },
-      onMapCreated: (GoogleMapController controller) {
-        controller.setMapStyle(
-            '[{"elementType":"geometry","stylers":[{"color":"#212121"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"elementType":"labels.text.stroke","stylers":[{"color":"#212121"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"color":"#757575"}]},{"featureType":"administrative.country","elementType":"labels.text.fill","stylers":[{"color":"#9e9e9e"}]},{"featureType":"administrative.land_parcel","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#bdbdbd"}]},{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#181818"}]},{"featureType":"poi.park","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"poi.park","elementType":"labels.text.stroke","stylers":[{"color":"#1b1b1b"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#2c2c2c"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#8a8a8a"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#373737"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#3c3c3c"}]},{"featureType":"road.highway.controlled_access","elementType":"geometry","stylers":[{"color":"#4e4e4e"}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"transit","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#3d3d3d"}]}]');
-        if (state.controller != null) {
-          if (!state.controller!.isCompleted) {
-            state.controller?.complete(controller);
+              .add(OnCameraMove(cameraPosition: cameraPosition));
+        },
+        onCameraIdle: () async {
+          context.read<ClientMapSeekerBloc>().add(OnCameraIdle());        
+        },
+        onMapCreated: (GoogleMapController controller) {
+          try {
+            controller.setMapStyle(
+                '[{"elementType":"geometry","stylers":[{"color":"#212121"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"elementType":"labels.text.stroke","stylers":[{"color":"#212121"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"color":"#757575"}]},{"featureType":"administrative.country","elementType":"labels.text.fill","stylers":[{"color":"#9e9e9e"}]},{"featureType":"administrative.land_parcel","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#bdbdbd"}]},{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#181818"}]},{"featureType":"poi.park","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"poi.park","elementType":"labels.text.stroke","stylers":[{"color":"#1b1b1b"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#2c2c2c"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#8a8a8a"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#373737"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#3c3c3c"}]},{"featureType":"road.highway.controlled_access","elementType":"geometry","stylers":[{"color":"#4e4e4e"}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"transit","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#3d3d3d"}]}]');
+            if (state.controller != null) {
+              if (!state.controller!.isCompleted) {
+                state.controller?.complete(controller);
+              }
+            }
+          } catch (e) {
+            print('Error configurando el estilo del mapa: $e');
           }
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -108,11 +121,12 @@ class ClientMapSeekerContent extends StatelessWidget {
   }
 
   Widget _cardAddressDestination(BuildContext context) {
-   
-        return DraggableScrollableSheet(
+    return Stack(
+      children: [
+        DraggableScrollableSheet(
           controller: draggableController,
-          initialChildSize: 0.36, // Tamaño inicial
-          minChildSize: 0.36, // Tamaño mínimo al colapsarse
+          initialChildSize: 0.42, // Tamaño inicial
+          minChildSize: 0.42, // Tamaño mínimo al colapsarse
           maxChildSize: 0.85, // Tamaño máximo al expandirse
           // expand: false,
 
@@ -122,179 +136,222 @@ class ClientMapSeekerContent extends StatelessWidget {
                 horizontal: 20,
                 vertical: 10,
               ),
-
               decoration: const BoxDecoration(
-                color: Color.fromARGB(131, 7, 9, 18),
+                color: Color.fromARGB(173, 7, 9, 18),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                 ),
               ),
-              
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: Stack(
-                  children:[ Column(
-
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
-                
-                  Center(  //RAYA DE CABECERA CENTRADA
-                    child: Container(
-                      height: 3,
-                      width: 50,
-                      color: Colors.white38,
-                    )
+                      Container(
+                        margin: const EdgeInsets.only(left: 15),
+                        alignment: Alignment.center,
+                        child: ScalingButton(
+                          imagePath: 'assets/img/thunder.png',
+                          onPressed: () {
+                            print('Botón animado presionado');
+                            // Lógica al presionar el botón
+                          },
+                          duration:
+                              const Duration(seconds: 1), // Rotación más rápida
+                          minScale: 0.9, // Tamaño mínimo al escalar
+                          maxScale: 1.5,
+                          text:
+                              'SOLICITAR TAXI', // Tamaño máximo al escalar// Botón más grande
+                        ),
+                      ),
+                      Spacer(),
+                      _butonCloseSheet(context),
+                    ],
                   ),
-
-                       _butonCloseSheet(context),
-                  
-                      PleacesAutocompleteTextfield(
-                        controller: pickUpController,
-                        label: 'De',
-                        focusNode: pickUpFocusNode,
-                        onPlaceSelected: (prediction) {
-                          context.read<ClientMapSeekerBloc>().add(
-                              ChangeMapCameraPosition(
-                                  lat: double.parse(prediction.lat.toString()),
-                                  lng: double.parse(prediction.lng.toString())));
-                          context
-                              .read<ClientMapSeekerBloc>()
-                              .add(OnGoogleAutocompletepickUpSelected(
-                                lat: double.parse(prediction.lat.toString()),
-                                lng: double.parse(prediction.lng.toString()),
-                                pickUpDescription:
-                                    prediction.description.toString(),
-                              ));
-                        },
-                      ),
-
-                       const  SizedBox( height: 15,),
-
-                      PleacesAutocompleteTextfield(
-                        controller: destinationController,
-                        label: 'A',
-                        focusNode: destinationFocusNode,
-                        onPlaceSelected: (prediction) {
-                          context
-                              .read<ClientMapSeekerBloc>()
-                              .add(OnGoogleAutocompleteDestinationSelected(
-                                lat: double.parse(prediction.lat.toString()),
-                                lng: double.parse(prediction.lng.toString()),
-                                destinationDescription:
-                                    prediction.description.toString(),
-                              ));
-                        },
-                      ),
-                      
-                      Row(
+                  SingleChildScrollView(
+                    controller: scrollController,
+                    child: Stack(children: [
+                      Column(
                         children: [
-                          _textBottonSelectOnMapDestination(context),
-                         
-                          
+                          Center(
+                              //RAYA DE CABECERA CENTRADA
+                              child: Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            height: 3,
+                            width: double.infinity,
+                            color: Colors.white38,
+                          )),
+
+                          BlocListener<ClientMapSeekerBloc,
+                              ClientMapSeekerState>(
+                            listener: (context, state) {
+                              if (state.placemarkData != null) {
+                                pickUpNotifier.value =
+                                    state.placemarkData!.address;
+                              }
+                            },
+                            child: ValueListenableBuilder<String>(
+                              valueListenable: pickUpNotifier,
+                              builder: (context, value, child) {
+                                return PleacesAutocompleteTextfield(
+                                  controller: pickUpController,
+                                  focusNode: pickUpFocusNode,
+                                  label: 'De',
+                                  onPlaceSelected: (prediction) {
+                                    context.read<ClientMapSeekerBloc>().add(
+                                          OnGoogleAutocompletepickUpSelected(
+                                            lat: double.parse(
+                                                prediction.lat.toString()),
+                                            lng: double.parse(
+                                                prediction.lng.toString()),
+                                            pickUpDescription: prediction
+                                                .description
+                                                .toString(),
+                                          ),
+                                        );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+
+                          //     BlocBuilder<ClientMapSeekerBloc, ClientMapSeekerState>(
+                          //     builder: (context, state) {
+                          //     return PleacesAutocompleteTextfield(
+                          //       controller: pickUpController,
+                          //       focusNode: pickUpFocusNode,
+                          //       label: 'De',
+                          //       onPlaceSelected: (prediction) {
+                          //         context.read<ClientMapSeekerBloc>().add(
+                          //           OnGoogleAutocompletepickUpSelected(
+                          //             lat: double.parse(prediction.lat.toString()),
+                          //             lng: double.parse(prediction.lng.toString()),
+                          //             pickUpDescription: prediction.description.toString(),
+                          //           ),
+                          //         );
+                          //       },
+                          //     );
+                          //   },
+                          // ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          PleacesAutocompleteTextfield(
+                            controller: destinationController,
+                            label: 'A',
+                            focusNode: destinationFocusNode,
+                            onPlaceSelected: (prediction) {
+                              context.read<ClientMapSeekerBloc>().add(OnGoogleAutocompleteDestinationSelected(
+                                    lat:double.parse(prediction.lat.toString()),
+                                    lng:double.parse(prediction.lng.toString()),
+                                    destinationDescription:
+                                        prediction.description.toString(),
+                                  ));
+                            },
+                          ),
+                          Row(
+                            children: [
+                              _textBottonSelectOnMapDestination(context),
+                            ],
+                          ),
+                          _buttonSelectedDestination(context),
                         ],
                       ),
-                      _buttonSelectedDestination(context),
-                      
-                     ],
-                   ),
-                 ]
-                ),
+                    ]),
+                  ),
+                ],
               ),
             );
           },
-        );
-      }
-    
+        ),
+      ],
+    );
+  }
+
   Widget _buttonSelectedDestination(BuildContext context) {
     final isButtonEnabled = pickUpController.text.isNotEmpty &&
         destinationController.text.isNotEmpty;
 
-    return 
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 50,
-          // color: Colors.white,
-          margin: const EdgeInsets.only(bottom: 20, left: 8, right: 8),
-         
-          child: BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
-            listener: (context, state) {
-              context.read<ClientMapSeekerBloc>().add(OnUpdaateButtonEstate(
-                  isButtonEnabled: state.isButtonEnabled));
-            },
-            child: DefaultElevatedButton(
-              text: 'REVISAR VIAJE',
-              onPressed: isButtonEnabled
-                  ? () {
-                      Navigator.pushNamed(
-                        context,
-                        'client/map/booking',
-                        arguments: {
-                          'pickUpLatlng': state.pickUpPLatLng,
-                          'destinationLatlng': state.destinationLatLng,
-                          'pickUpDescription': state.pickUpDescription,
-                          'destinationDescription':
-                              state.destinationDescription,
-                        },
-                      );
-                    }
-                  : null, // Desactiva el botón
-              colorFondo: isButtonEnabled
-                  ? const Color.fromARGB(255, 243, 159, 90)
-                  : Colors.grey, // Cambia el color si está deshabilitado
-              colorLetra: isButtonEnabled ? Colors.black : Colors.white38,
-            ),
-          ),
-        );
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      // color: Colors.white,
+      margin: const EdgeInsets.only(bottom: 20, left: 8, right: 8),
+
+      child: BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
+        listener: (context, state) {
+          context.read<ClientMapSeekerBloc>().add(
+              OnUpdaateButtonEstate(isButtonEnabled: state.isButtonEnabled));
+        },
+        child: DefaultElevatedButton(
+          text: 'REVISAR VIAJE',
+          onPressed: isButtonEnabled
+              ? () {
+                  Navigator.pushNamed(
+                    context,
+                    'client/map/booking',
+                    arguments: {
+                      'pickUpLatlng': state.pickUpPLatLng,
+                      'destinationLatlng': state.destinationLatLng,
+                      'pickUpDescription': state.pickUpDescription,
+                      'destinationDescription': state.destinationDescription,
+                    },
+                  );
+                }
+              : null, // Desactiva el botón
+          colorFondo: isButtonEnabled
+              ? const Color.fromARGB(255, 243, 159, 90)
+              : Colors.grey, // Cambia el color si está deshabilitado
+          colorLetra: isButtonEnabled ? Colors.black : Colors.white38,
+        ),
+      ),
+    );
   }
 
   Widget _textBottonSelectOnMapDestination(BuildContext context) {
-    
-     
-      return TextButton.icon(
-        onPressed: () async {
-          final result = await Navigator.pushNamed(
-            context,
-            'client/destinationmap',
-          );
-          if (result != null && result is Map<String, dynamic>) {
-            destinationController.text = result['destinationSelection'] ?? '';
-            context.read<ClientMapSeekerBloc>().add(
-                  OnGoogleAutocompleteDestinationSelected(
-                    lat: result['lat'] ?? 0.0,
-                    lng: result['lng'] ?? 0.0,
-                    destinationDescription: result['destinationSelection'] ?? '',
-                  ),
-                );
-          }
-        },
-        icon: const Icon(Icons.add_location_alt_rounded, color: Color.fromARGB(255, 230, 254, 83)),
-        label: const Text('Selecciona en el mapa', style: TextStyle(color: Color.fromARGB(255, 230, 254, 83))),
-      );
-  
+    return TextButton.icon(
+      onPressed: () async {
+        final result = await Navigator.pushNamed(
+          context,
+          'client/destinationmap',
+        );
+        if (result != null && result is Map<String, dynamic>) {
+          destinationController.text = result['destinationSelection'] ?? '';
+          context.read<ClientMapSeekerBloc>().add(
+                OnGoogleAutocompleteDestinationSelected(
+                  lat: result['lat'] ?? 0.0,
+                  lng: result['lng'] ?? 0.0,
+                  destinationDescription: result['destinationSelection'] ?? '',
+                ),
+              );
+        }
+      },
+      icon: const Icon(Icons.add_location_alt_rounded,
+          color: Color.fromARGB(255, 230, 254, 83)),
+      label: const Text('Selecciona en el mapa',
+          style: TextStyle(color: Color.fromARGB(255, 230, 254, 83))),
+    );
   }
 
   Widget _butonCloseSheet(BuildContext context) {
-     return Container  (
+    return Container(
       alignment: Alignment.topRight,
-  
-        child: IconButton(
-          //  highlightColor: const Color.fromARGB(255, 85, 85, 85),
-          onPressed: () {
-            draggableController.animateTo(
-              0.3, // Expande al 100%
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          
-            // Desfoca los TextFields
-            pickUpFocusNode.unfocus();
-            destinationFocusNode.unfocus();
-                  
-          },
-          icon:  const Icon(Icons.close_rounded, size: 25, color: Colors.white38),
-                    ),
-        );
-        
+      child: IconButton(
+        //  highlightColor: const Color.fromARGB(255, 85, 85, 85),
+        onPressed: () {
+          draggableController.animateTo(
+            0.3, // Expande al 100%
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+
+          // Desfoca los TextFields
+          pickUpFocusNode.unfocus();
+          destinationFocusNode.unfocus();
+        },
+        icon: const Icon(Icons.close_rounded, size: 25, color: Colors.white38),
+      ),
+    );
   }
 }

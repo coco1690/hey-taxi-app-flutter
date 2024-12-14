@@ -20,7 +20,7 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
     
 
    on<ClientMapSeekerInitEvent>((event, emit) async {
-    final Completer<GoogleMapController> controller = Completer<GoogleMapController>();
+   Completer<GoogleMapController> controller = Completer<GoogleMapController>();
      emit(
       state.copyWith(
         controller: controller
@@ -68,7 +68,7 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
     GoogleMapController googleMapController = await state.controller!.future;
     final newCameraPosition = CameraPosition(
       target: LatLng(event.lat, event.lng),
-      zoom: 14,
+      zoom: 13,
       bearing: 0,
     );
     await googleMapController.animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
@@ -83,8 +83,11 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
    });
 
    on<OnCameraIdle>((event, emit) async {
+  print('Evento OnCameraIdle iniciado');
+
   try {
     PlacemarkData placemarkData = await geolocatorUseCases.getPlacemarkData.run(state.cameraPosition);
+    print('Datos obtenidos: ${placemarkData.address}');
     emit(state.copyWith(placemarkData: placemarkData));
   } catch (e) {
     print('ERROR EN OnCameraIdle: $e');
