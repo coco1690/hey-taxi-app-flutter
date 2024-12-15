@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hey_taxi_app/src/domain/utils/resource.dart';
+import 'package:hey_taxi_app/src/presentation/utils/bloc_form_item.dart';
 
 
 
@@ -19,6 +20,9 @@ class ClientMapBookingInfoState extends Equatable {
   final Map<PolylineId, Polyline> polylines ;
   final bool isBottomSheetExpanded;
   final Resource? responseTimeAndDistance;
+  final Resource? responseClientRequest;
+  final BlocFormItem? fareOfeered;
+  final BlocFormItem? detailsLocation;
 
   const ClientMapBookingInfoState({
     this.position,
@@ -32,6 +36,10 @@ class ClientMapBookingInfoState extends Equatable {
     this.polylines = const <PolylineId, Polyline>{},
     this.isBottomSheetExpanded = false,
     this.responseTimeAndDistance,
+    this.responseClientRequest,
+    this.fareOfeered,
+    this.detailsLocation,
+
   });
 
   ClientMapBookingInfoState copyWith({
@@ -46,6 +54,10 @@ class ClientMapBookingInfoState extends Equatable {
     Map<PolylineId, Polyline>? polylines,
     bool? isBottomSheetExpanded,
     Resource? responseTimeAndDistance,
+    Resource? responseClientRequest,
+    BlocFormItem? fareOfeered,
+    BlocFormItem? detailsLocation,
+
     
 
   }) {
@@ -61,6 +73,9 @@ class ClientMapBookingInfoState extends Equatable {
       polylines: polylines ?? this.polylines,
       isBottomSheetExpanded: isBottomSheetExpanded ?? this.isBottomSheetExpanded,
       responseTimeAndDistance: responseTimeAndDistance ?? this.responseTimeAndDistance,
+      responseClientRequest: responseClientRequest ?? this.responseClientRequest,
+      fareOfeered: fareOfeered ?? this.fareOfeered,
+      detailsLocation: detailsLocation ?? this.detailsLocation,
 
     );
   }
@@ -79,6 +94,9 @@ class ClientMapBookingInfoState extends Equatable {
     polylines,
     isBottomSheetExpanded,
     responseTimeAndDistance,
+    responseClientRequest,
+    fareOfeered,
+    detailsLocation,
     ];
 }
 

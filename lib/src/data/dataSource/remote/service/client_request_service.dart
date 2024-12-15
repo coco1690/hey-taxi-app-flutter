@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:hey_taxi_app/src/data/api/api_config.dart';
+import 'package:hey_taxi_app/src/domain/models/client_request.dart';
 import 'package:hey_taxi_app/src/domain/models/time_and_distance_values.dart';
 import 'package:hey_taxi_app/src/domain/utils/list_to_string.dart';
 import 'package:hey_taxi_app/src/domain/utils/resource.dart';
@@ -33,6 +34,32 @@ class ClientRequestService {
       return ErrorData( e.toString());// viene de utils resource
     }
   }
+
+  Future<Resource<bool>> create(ClientRequest clientRequest) async {
+    try{  
+      Uri url = Uri.http( ApiConfig.API_HEY_TAXI, '/api/v1/client-requests');
+      Map< String, String > headers = { 'Content-Type': 'application/json'};
+      String body = json.encode(clientRequest);
+      final response = await http.post(url, headers: headers, body: body);
+      final data = json.decode(response.body);
+      print('Data recibida: $data');
+
+      if( response.statusCode == 200 || response.statusCode == 201 ){
+        //  ClientRequest clientRequest = ClientRequest.fromJson(data); // transformo la Data a authResponse 
+         print( ' Data Remote ClientRequest create: ${ clientRequest.toJson()}');
+         return Succes( true ); // viene de utils resource
+
+      } else {
+         return ErrorData( listToString(data['message']) );
+      }
+     
+    } catch(e){
+      print('Error en client request service: $e');
+      return ErrorData( e.toString());// viene de utils resource
+    }
+
+  }
 }
+
 
 

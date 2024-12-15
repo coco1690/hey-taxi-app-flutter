@@ -1,4 +1,5 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/src/presentation/utils/bloc_form_item.dart';
 
 abstract class ClientMapBookingInfoEvent {}
 
@@ -33,6 +34,18 @@ class ToggleBottomSheetEvent extends ClientMapBookingInfoEvent{
 }
 
 class GetTimeAndDistanceValues extends ClientMapBookingInfoEvent {}
+
+class CreateClientRequest extends ClientMapBookingInfoEvent {}
+
+class FareOfferedOnChanged extends ClientMapBookingInfoEvent {
+  final BlocFormItem? fareOfeered;
+  FareOfferedOnChanged({required this.fareOfeered});
+}
+
+class DetailsLocationOnChanged extends ClientMapBookingInfoEvent {
+  final BlocFormItem? detailsLocation;
+  DetailsLocationOnChanged({required this.detailsLocation});
+}
 
 
 

@@ -1,5 +1,6 @@
 import 'package:hey_taxi_app/src/data/dataSource/remote/service/client_request_service.dart';
 import 'package:hey_taxi_app/src/data/repository/client_request_repository_imple.dart';
+import 'package:hey_taxi_app/src/domain/usecase/client-request/create_client_request_usecase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -63,7 +64,6 @@ abstract class AppModule{
 
   @injectable
   ClientRequestService get clientRequestService => ClientRequestService();
-
 
 
 
@@ -132,6 +132,7 @@ abstract class AppModule{
 
     @injectable
     ClientRequestUseCases get clientRequestUseCases => ClientRequestUseCases(
-      getTimeAndDistanceClientRequest: GetTimeAndDistanceClientRequestUseCase(clientRequestRepository)
+      getTimeAndDistanceClientRequest: GetTimeAndDistanceClientRequestUseCase(clientRequestRepository),
+      createClientRequest: CreateClientRequestUsecase(clientRequestRepository) 
     );
 }

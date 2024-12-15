@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/src/domain/models/auth_response.dart';
+import 'package:hey_taxi_app/src/domain/models/client_request.dart';
 import 'package:hey_taxi_app/src/domain/models/time_and_distance_values.dart';
+import 'package:hey_taxi_app/src/domain/usecase/auth/index.dart';
 import 'package:hey_taxi_app/src/domain/usecase/client-request/client_request_usecases.dart';
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/geolocator_usecases.dart';
 import 'package:hey_taxi_app/src/domain/utils/resource.dart';
+import 'package:hey_taxi_app/src/presentation/utils/bloc_form_item.dart';
 import 'index.dart';
 
 
@@ -16,8 +20,9 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
     
   GeolocatorUseCases geolocatorUseCases;
   ClientRequestUseCases clientRequestUseCases;
+  AuthUseCases authUseCases;
 
-  ClientMapBookingInfoBloc(this.geolocatorUseCases, this.clientRequestUseCases) : super(const ClientMapBookingInfoState()){
+  ClientMapBookingInfoBloc(this.geolocatorUseCases, this.clientRequestUseCases, this.authUseCases) : super(const ClientMapBookingInfoState()){
     
 
    on<ClientMapBookingInfoInitEvent>((event, emit) async {
@@ -126,6 +131,49 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
         responseTimeAndDistance: timeAndDistanceValues
         ));
     });
+
+   on<CreateClientRequest>((event, emit) async {
+       AuthResponseModel authResponseModel =await authUseCases.getUserSession.run();
+       Resource<bool> response = await clientRequestUseCases.createClientRequest.run( 
+        ClientRequest(
+          idClient:  authResponseModel.user.id!,
+          // fareOffered: fareOffered,
+          // detailsLocation: state.detailsLocation?.value ?? '',
+          pickupDescription: state.pickUpDescription,
+          destinationDescription: state.destinationDescription,
+          pickupLat: state.pickUpPLatLng!.latitude,
+          pickupLng: state.pickUpPLatLng!.longitude,
+          destinationLat: state.destinationLatLng!.latitude,
+          destinationLng: state.destinationLatLng!.longitude,
+        ));
+        emit(
+          state.copyWith(
+            responseClientRequest: response
+          ));
+
+    });
+
+   on<FareOfferedOnChanged>((event, emit) async {
+    emit(
+      state.copyWith( fareOfeered: BlocFormItem(
+        value: event.fareOfeered?.value == null ? '' : event.fareOfeered?.value ?? '',
+        error: event.fareOfeered?.error ?? '',
+      ),
+        ));
+    });
+
+   on<DetailsLocationOnChanged>((event, emit) async {
+    emit(
+      state.copyWith( detailsLocation: BlocFormItem(
+        value: event.detailsLocation?.value == null ? '' : event.detailsLocation?.value ?? '',
+        error: event.detailsLocation?.error ?? '',
+      ),
+        
+        ));
+    });
+
+
+
   }
  
 }

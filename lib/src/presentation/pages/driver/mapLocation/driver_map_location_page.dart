@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hey_taxi_app/src/presentation/pages/driver/mapLocation/driver_map_location_content.dart';
 
@@ -12,6 +13,7 @@ class DriverMapLocationPage extends StatefulWidget {
   State<DriverMapLocationPage> createState() => _DriverMapLocationPageState();
 }
 class _DriverMapLocationPageState extends State<DriverMapLocationPage> {
+  String? mapStyle;
   late DriverMapLocationBloc _bloc;
   
    @override
@@ -23,6 +25,11 @@ class _DriverMapLocationPageState extends State<DriverMapLocationPage> {
     print('DRIVER CONECTADO');
     _bloc.add(FindMyPosition());
     print('DRIVER EN POSICION');
+    rootBundle.loadString('assets/img/style_map.json').then((style) {
+      setState(() {
+        mapStyle = style;
+      });
+    });
   }
 
   @override
@@ -38,7 +45,7 @@ class _DriverMapLocationPageState extends State<DriverMapLocationPage> {
     return Scaffold(
       body: BlocBuilder<DriverMapLocationBloc, DriverMapLocationState>(
         builder: (context, state) {
-          return DriverMapLocationContent(state );
+          return DriverMapLocationContent(state, mapStyle: mapStyle);
         },
       ),
     );

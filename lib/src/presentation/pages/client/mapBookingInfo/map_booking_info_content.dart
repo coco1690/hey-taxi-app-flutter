@@ -8,10 +8,11 @@ import 'bloc/index.dart';
 class ClientMapBookingInfoContent extends StatelessWidget {
   final ClientMapBookingInfoState state;
   final TimeAndDistanceValues timeAndDistanceValues;
+  final String? mapStyle;
   // final Map<String, dynamic> arguments;
 
   const ClientMapBookingInfoContent(
-      {super.key, required this.state, required this.timeAndDistanceValues});
+      {super.key, required this.state, required this.timeAndDistanceValues, required this.mapStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +37,11 @@ class ClientMapBookingInfoContent extends StatelessWidget {
 
   Widget _googleMaps(BuildContext context, ClientMapBookingInfoState state) {
     return GoogleMap(
+      style: mapStyle,
       mapType: MapType.normal,
       initialCameraPosition: state.cameraPositionBooking,
       markers: Set<Marker>.of(state.markers.values),
       polylines: Set<Polyline>.of(state.polylines.values),
-      onMapCreated: (GoogleMapController controller) {
-         try {
-         controller.setMapStyle(
-            '[{"elementType":"geometry","stylers":[{"color":"#212121"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"elementType":"labels.text.stroke","stylers":[{"color":"#212121"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"color":"#757575"}]},{"featureType":"administrative.country","elementType":"labels.text.fill","stylers":[{"color":"#9e9e9e"}]},{"featureType":"administrative.land_parcel","stylers":[{"visibility":"off"}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#bdbdbd"}]},{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#181818"}]},{"featureType":"poi.park","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"poi.park","elementType":"labels.text.stroke","stylers":[{"color":"#1b1b1b"}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#2c2c2c"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#8a8a8a"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#373737"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#3c3c3c"}]},{"featureType":"road.highway.controlled_access","elementType":"geometry","stylers":[{"color":"#4e4e4e"}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#616161"}]},{"featureType":"transit","elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#3d3d3d"}]}]'
-            );
-        if (state.controller != null) {
-          if (!state.controller!.isCompleted) {
-            state.controller?.complete(controller);
-          }
-        }
-      } catch (e) {
-        print('Error configurando el estilo del mapa: $e');
-      }
-      },
     );
   }
 
@@ -73,7 +61,7 @@ class ClientMapBookingInfoContent extends StatelessWidget {
        
 
         return DraggableScrollableSheet(
-          initialChildSize: 0.3, // Tamaño inicial
+          initialChildSize: 0.45, // Tamaño inicial
           minChildSize: 0.2, // Tamaño mínimo al colapsarse
           maxChildSize: 0.6, // Tamaño máximo al expandirse
           builder: (context, scrollController) {
@@ -114,20 +102,22 @@ class ClientMapBookingInfoContent extends StatelessWidget {
                       leading: const Icon(Icons.my_location_rounded),
                     ),
                      ListTile(
-                      title: const  Text('Tiempo y distancia'),
-                      subtitle: Text('$duration - $distance ',
+                      title: const  Text('Tiempo / Distancia / Precio aprox'),
+                      subtitle: Text('$duration / $distance / \$ ${approximateValue(recommendedValue)}',
                           style: const  TextStyle(color: Colors.black38)),
                       leading: const Icon(Icons.timer_sharp),
                     ),
-                     ListTile(
-                      title: const Text('Precio aproximado del viaje'),
-                      subtitle: Text( '\$ ${approximateValue(recommendedValue)}',
-                          style: const TextStyle(color: Colors.black38)),
-                      leading: const  Icon(Icons.attach_money),
-                    ),
+                    //  ListTile(
+                    //   title: const Text('Precio aproximado del viaje'),
+                    //   subtitle: Text( '\$ ${approximateValue(recommendedValue)}',
+                    //       style: const TextStyle(color: Colors.black38)),
+                    //   leading: const  Icon(Icons.attach_money),
+                    // ),
                     DefaultElevatedButton(
                       text: 'SOLICITAR TAXISTA',
-                      onPressed: () {},
+                      onPressed: () {
+                        context.read<ClientMapBookingInfoBloc>().add(CreateClientRequest());
+                      },
                       colorFondo: const Color.fromARGB(255, 243, 159, 90),
                       colorLetra: Colors.black,
                     ),

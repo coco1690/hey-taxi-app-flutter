@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker_bloc.dart';
 import 'package:hey_taxi_app/src/presentation/pages/client/mapSeeker/bloc/client_map_seeker_event.dart';
@@ -13,9 +14,9 @@ class ClientMapSeekerPage extends StatefulWidget {
 }
 
 class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
-
   late ClientMapSeekerBloc _bloc;
 
+  String? mapStyle;
   TextEditingController destinationController = TextEditingController();
   TextEditingController pickUpController = TextEditingController();
   final ValueNotifier<String> pickUpNotifier = ValueNotifier<String>('');
@@ -32,6 +33,7 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
   void initState() {
     super.initState();
     _bloc = context.read<ClientMapSeekerBloc>();
+
     // Escuchar cambios de foco en los TextFields
     pickUpFocusNode.addListener(_handleFocusChange);
     destinationFocusNode.addListener(_handleFocusChange);
@@ -44,6 +46,11 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
       _bloc.add(ConnectSocketIo());
       print('CLIENT MAP SEEKER CONECTADO');
       _bloc.add(FindMyPosition());
+       rootBundle.loadString('assets/img/style_map.json').then((style) {
+      setState(() {
+        mapStyle = style;
+      });
+    });
     });
   }
 
@@ -59,18 +66,14 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
   } 
 
   void _handleFocusChange() {
-  print("FocusNode estado:");
-  print("PickUp FocusNode: ${pickUpFocusNode.hasFocus}");
-  print("Destination FocusNode: ${destinationFocusNode.hasFocus}");
-  
     // Detectar cuando algún TextField recibe el foco y expandir la hoja
     if (pickUpFocusNode.hasFocus || destinationFocusNode.hasFocus) {
       context.read<ClientMapSeekerBloc>().add(OnFocusTextField());
-
     }else{
       print("Focus perdido.");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +88,7 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
             destinationFocusNode: destinationFocusNode,
             draggableController: draggableController,
             pickUpNotifier: pickUpNotifier,
+            mapStyle: mapStyle,
           );
         },
       ),
