@@ -41,6 +41,8 @@ class MyApp extends StatelessWidget {
           'profile/update':         (BuildContext context) => const ProfileUpdatePage(),
           'client/destinationmap':  (BuildContext context) => const ClientDestinationMapPage(),
           'client/map/booking':     (BuildContext context) => const MapBookingInfoPage(),
+          // 'driver/maplocation':     (BuildContext context) => const DriverMapLocationPage(),
+          // 'client/mapseeker':       (BuildContext context) => const ClientMapSeekerPage(),
           
         },
       ),

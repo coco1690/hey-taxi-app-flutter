@@ -34,9 +34,9 @@ class _DriverMapLocationPageState extends State<DriverMapLocationPage> {
 
   @override
   void dispose() {
-    _bloc.add(StopLocation());
-    _bloc.add(DisconnectSocketIo());
-    print('DRIVER DESCONECTADO');
+    // _bloc.add(StopLocation());
+    // _bloc.add(DisconnectSocketIo());
+    // print('DRIVER DESCONECTADO');
     super.dispose();
   }
 

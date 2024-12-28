@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hey_taxi_app/main.dart';
 import 'package:hey_taxi_app/src/domain/models/role.dart';
 import 'package:hey_taxi_app/src/domain/models/user.dart';
@@ -19,7 +19,22 @@ class ClientHomePage extends StatefulWidget {
 }
 
 class _ClientHomePageState extends State<ClientHomePage> {
+
+// late ClientHomeBloc _bloc;
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+//  @override
+//   void initState() {
+//     _bloc = context.read<ClientHomeBloc>();
+//     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+//       // _bloc.add(GetUserInfoHome());
+//     _bloc.add(ChangeDrawerPage(pageIdex: 0));
+//     });
+//     super.initState();
+
+//  }
+
+
 
   List<Widget> pageList = <Widget>[
     const ClientMapSeekerPage(),
@@ -27,6 +42,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     const RolesPage()
     ];
   
+
  
   @override
   Widget build(BuildContext context) {

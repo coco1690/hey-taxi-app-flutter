@@ -20,6 +20,7 @@ class ClientMapBookingInfoContent extends StatelessWidget {
     return Stack(
       children: [
         _googleMaps(context, state),
+        _iconButtonBack(context),
         _draggableCardBookingInfo(context, timeAndDistanceValues),
         Positioned(
           bottom: 25,
@@ -32,6 +33,23 @@ class ClientMapBookingInfoContent extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _iconButtonBack(BuildContext context) {
+    return  
+    Container(
+    margin: const EdgeInsets.only(top:100, left: 20),
+    child: IconButton(
+      
+      highlightColor: Colors.white,
+      onPressed: (){
+        Navigator.pop(context);
+      }, 
+        icon: const Icon(Icons.arrow_back_ios_new_rounded), 
+        color: const Color.fromARGB(255, 243, 159, 90,), 
+        iconSize: 40,
+      )
     );
   }
 
@@ -57,13 +75,14 @@ class ClientMapBookingInfoContent extends StatelessWidget {
     // int    roundedRecomendedValue = recommendedValue.round();
 
     return BlocBuilder<ClientMapBookingInfoBloc, ClientMapBookingInfoState>(
+      
       builder: (context, state) {
        
 
         return DraggableScrollableSheet(
           initialChildSize: 0.45, // Tamaño inicial
           minChildSize: 0.2, // Tamaño mínimo al colapsarse
-          maxChildSize: 0.6, // Tamaño máximo al expandirse
+          maxChildSize: 0.46, // Tamaño máximo al expandirse
           builder: (context, scrollController) {
             return 
               Container(
@@ -117,6 +136,7 @@ class ClientMapBookingInfoContent extends StatelessWidget {
                       text: 'SOLICITAR TAXISTA',
                       onPressed: () {
                         context.read<ClientMapBookingInfoBloc>().add(CreateClientRequest());
+                        print('SOLICIAR TAXISTA CLIENT DESDE MAPBOOKINGINFO');
                       },
                       colorFondo: const Color.fromARGB(255, 243, 159, 90),
                       colorLetra: Colors.black,

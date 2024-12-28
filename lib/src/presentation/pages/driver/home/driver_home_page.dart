@@ -5,9 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hey_taxi_app/src/domain/models/role.dart';
 import 'package:hey_taxi_app/src/domain/models/user.dart';
+import 'package:hey_taxi_app/src/presentation/pages/driver/mapLocation/bloc/index.dart';
 
 import 'package:hey_taxi_app/src/presentation/pages/driver/mapLocation/driver_map_location_page.dart';
 import '../../index.dart';
+import '../driver_client_requests/driver_client_requests_page.dart';
 import 'bloc/index.dart';
 
 
@@ -21,11 +23,22 @@ class DriverHomePage extends StatefulWidget {
 }
 
 class _DriverHomePageState extends State<DriverHomePage> {
+  
+late DriverHomeBloc _bloc;
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+ @override
+  void initState() {
+    _bloc = context.read<DriverHomeBloc>();
+    _bloc.add(ChangeDrawerDriverPage(pageIdex: 0));
+    super.initState();
+
+ }
 
 
   List<Widget> pageList = <Widget>[
     const DriverMapLocationPage(),
+    const DriverClientRequestsPage(),
     const ProfileInfoPage(),
     const RolesPage()
     ];
@@ -38,14 +51,6 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
       key: _scaffoldKey,
-      // appBar: AppBar(
-      //   // backgroundColor:const Color.fromARGB(255, 243, 159, 90,),
-      //   // backgroundColor:const Color.fromARGB(255, 192, 8, 8),
-      //   // backgroundColor:const  Color.fromARGB(255, 229, 244, 19),
-      //   // foregroundColor: const Color.fromARGB(255, 7, 7, 7),
-      //   backgroundColor:const Color.fromARGB(251, 13, 13, 13),
-      //   foregroundColor: const Color.fromARGB(255, 230, 254,83),
-      // ),
       body: BlocBuilder<DriverHomeBloc, DriverHomeState>(
         builder: (context, state) {
           return Stack(
@@ -83,12 +88,6 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
                       colors: [
                         Color.fromARGB(255, 19, 19, 19),
                           Color.fromARGB(255, 18, 18, 18),
-                        //   Color.fromARGB(255, 238, 255, 5),
-                        //  Color.fromARGB(255, 144, 154, 3),
-                        //  Color.fromARGB(255, 236, 12, 12),
-                        //  Color.fromARGB(255, 73, 6, 6),
-                        // Color.fromARGB(255, 243, 159, 90),
-                        // Color.fromARGB(255, 114, 62, 19),
                       ],
                     ),
                   ),
@@ -106,20 +105,40 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
                     Navigator.pop(context);
                   },
                 ),
-
-                 ListTile(
-                  title: const Text('Roles de usuario'),
-                  selected: state.pageIdex == 2, 
+                ListTile(
+                  title: const Text('Solicitudes de viajes'),
+                  selected: state.pageIdex == 1, 
                   // agg el primer valor
                   onTap: ()  {
-                    context.read<DriverHomeBloc>().add(ChangeDrawerDriverPage( pageIdex: 2 ) ); // en el .add agregpo los eventos
+                    context.read<DriverHomeBloc>().add(ChangeDrawerDriverPage( pageIdex: 1) ); // en el .add agregpo los eventos
                     Navigator.pop(context);
                   },
                 ),
+
+                ListTile(
+                  title: const Text('Roles de usuario'),
+                  selected: state.pageIdex == 3, 
+                  onTap: () {
+                    // 1. Desconexión
+                    context.read<DriverMapLocationBloc>().add(StopLocation());
+                    context.read<DriverMapLocationBloc>().add(DisconnectSocketIo());
+                    print('DRIVER DESCONECTADO');
+                    
+                    // 2. Cambiar rol
+                    // context.read<AuthUseCases>().setRole('client');
+                     context.read<DriverHomeBloc>().add(ChangeDrawerDriverPage( pageIdex: 3 ) );
+                    // 3. Ir a pantalla de cliente
+                   Navigator.pop(context);
+                  },
+                ),
+
               
                 ListTile(
                   title: const Text('Cerrar sesion'),
                   onTap: () {
+                     // 1. Desconexión
+                    context.read<DriverMapLocationBloc>().add(StopLocation());
+                    context.read<DriverMapLocationBloc>().add(DisconnectSocketIo());
                     context.read<DriverHomeBloc>().add(Logout() ); // en el .add agregpo los eventos
                     Navigator.pushAndRemoveUntil(
                       context, 
@@ -166,9 +185,9 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
           role?.id ?? 'CONDUCTOR',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color.fromARGB(255, 172, 234, 3)),
          ),
-        selected: state.pageIdex == 1, // agg el primer valor
+        selected: state.pageIdex == 2, // agg el primer valor
         onTap: () {
-          driverHomeBloc.add(ChangeDrawerDriverPage(pageIdex: 1)); // en el .add agregpo los eventos
+          driverHomeBloc.add(ChangeDrawerDriverPage(pageIdex: 2)); // en el .add agregpo los eventos
           Navigator.pop(context);
         },
       )

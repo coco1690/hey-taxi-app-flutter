@@ -18,7 +18,9 @@ import '../data/dataSource/remote/service/index.dart';
 import '../data/repository/index.dart';
 import '../domain/repository/index.dart';
 import '../domain/usecase/auth/index.dart';
+import '../domain/usecase/client-request/get_nearby_client_request_response_usecase.dart';
 import '../domain/usecase/client-request/index.dart';
+import '../domain/usecase/driver_position/get_driver_position_usecase.dart';
 import '../domain/usecase/driver_position/index.dart';
 import '../domain/usecase/geolocator/index.dart';
 
@@ -126,12 +128,14 @@ abstract class AppModule{
 
     @injectable
     DriverPositionUseCases get driverPositionUseCases => DriverPositionUseCases(
+      getDriverPosition:    GetDriverPositionUseCase   (driverPositionRepository),
       createDriverPosition: CreateDriverPositionUseCase(driverPositionRepository),
       deleteDriverPosition: DeleteDriverPositionUseCase(driverPositionRepository)
     );
 
     @injectable
     ClientRequestUseCases get clientRequestUseCases => ClientRequestUseCases(
+      getNearbyClientRequestResponse: GetNearbyClientRequestResponseUsecase(clientRequestRepository),
       getTimeAndDistanceClientRequest: GetTimeAndDistanceClientRequestUseCase(clientRequestRepository),
       createClientRequest: CreateClientRequestUsecase(clientRequestRepository) 
     );

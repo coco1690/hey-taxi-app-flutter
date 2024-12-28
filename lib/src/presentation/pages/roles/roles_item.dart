@@ -1,6 +1,8 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hey_taxi_app/src/domain/models/role.dart';
+
 
 class RolesItem extends StatelessWidget {
 
@@ -21,18 +23,29 @@ class RolesItem extends StatelessWidget {
       },
       child: Column(
         children: [
-       
+
           Container(
+            margin: const EdgeInsets.only( bottom: 10, top: 10),
             height: 150,
-            margin: EdgeInsets.only( bottom: 10, top: 15),
-            child: FadeInImage(
-              image: NetworkImage(role.image ?? ''),
-              fit: BoxFit.contain,
-              fadeInDuration: const Duration(milliseconds: 1),
-              placeholder: const AssetImage('assets/img/no-image.png'), 
+            child: AspectRatio(
+              aspectRatio: 1,
+            child: ClipOval(
+              child:( role.image != null && role.image!.isNotEmpty )
+              ? CachedNetworkImage(
+                imageUrl: role.image ?? '',
+                placeholder: (context, url ) => Image.asset('assets/img/user_image.png'),
+                errorWidget: (context, url, error) => Image.asset('assets/img/user_menu.png'),
+                fit: BoxFit.cover,
+              )
+              : Image.asset(
+                'assets/img/user_image.png',
+                fit: BoxFit.cover,
+                ),
+                
             )
           ),
-
+        ),
+        
           Text(
             role.name,
             style: const TextStyle(

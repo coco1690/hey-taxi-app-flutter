@@ -62,22 +62,23 @@ class ClientMapSeekerContent extends StatelessWidget {
 // ############ WIDGETS ############
 
   Widget _googleMaps(BuildContext context, ClientMapSeekerState state) {
+    
     return BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
       listenWhen: (previous, current) =>
               previous.placemarkData?.address != current.placemarkData?.address,
       listener: (context, state) {
+
       print('LISTEN WHEN ${state.placemarkData?.address}');
-      pickUpController.text =  state.placemarkData?.address ?? '';
-        // TODO: implement listener
          if (state.placemarkData != null) {                 
-          context
-                .read<ClientMapSeekerBloc>()
-                .add(OnGoogleAutocompletepickUpSelected(
-                  lat: state.placemarkData!.lat,
-                  lng: state.placemarkData!.lng,
-                  pickUpDescription: state.placemarkData!.address,
-                ));  
-         }
+      pickUpController.text =  state.placemarkData?.address ?? '';
+        context
+        .read<ClientMapSeekerBloc>()
+        .add(OnGoogleAutocompletepickUpSelected(
+          lat: state.placemarkData!.lat,
+          lng: state.placemarkData!.lng,
+          pickUpDescription: state.placemarkData!.address,
+        ));  
+        }
       },
       child: GoogleMap(
         style: mapStyle,
@@ -92,6 +93,7 @@ class ClientMapSeekerContent extends StatelessWidget {
         onCameraIdle: () async {
           context.read<ClientMapSeekerBloc>().add(OnCameraIdle());        
         },
+        myLocationEnabled: true,
       ),
     );
   }

@@ -17,6 +17,7 @@ class MapBookingInfoPage extends StatefulWidget {
 }
 
 class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
+  late ClientMapBookingInfoBloc _bloc;
   String? mapStyle;
   LatLng? pickUpLatlng;
   LatLng? destinationLatlng;
@@ -25,31 +26,36 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
 
   @override
   void initState() {
-    super.initState();
+    
+    _bloc = context.read<ClientMapBookingInfoBloc>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<ClientMapBookingInfoBloc>().add(
-          ClientMapBookingInfoInitEvent(
-              pickUpPLatLng: pickUpLatlng!,
-              destinationLatLng: destinationLatlng!,
-              pickUpDescription: pickUpDescription!,
-              destinationDescription: destinationDescription!));
+     _bloc.add(ClientMapBookingInfoInitEvent(
+        pickUpPLatLng: pickUpLatlng!,
+        destinationLatLng: destinationLatlng!,
+        pickUpDescription: pickUpDescription!,
+        destinationDescription: destinationDescription!
+      ));
 
-      context.read<ClientMapBookingInfoBloc>().add(GetTimeAndDistanceValues());
-      context.read<ClientMapBookingInfoBloc>().add(AddPolyline());
-      context.read<ClientMapBookingInfoBloc>().add(
+      _bloc.add(GetTimeAndDistanceValues());
+      _bloc.add(AddPolyline());
+      _bloc.add(
           ChangeMapCameraPositionMapBookingInfo(
-              lat: pickUpLatlng!.latitude, lng: pickUpLatlng!.longitude));
+              lat: pickUpLatlng!.latitude, 
+              lng: pickUpLatlng!.longitude
+          ));
       rootBundle.loadString('assets/img/style_map.json').then((style) {
         setState(() {
           mapStyle = style;
         });
       });
     });
+    super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> arguments =
+   final Map<String, dynamic> arguments =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     pickUpLatlng = arguments['pickUpLatlng'];
     destinationLatlng = arguments['destinationLatlng'];
@@ -63,15 +69,17 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
     // }
     return Scaffold(
       body: BlocListener<ClientMapBookingInfoBloc, ClientMapBookingInfoState>(
+        listenWhen: (previous, current) => previous.responseClientRequest != current.responseClientRequest,
         listener: (context, state) {
-          // TODO: implement listener
+          
           final responseClientRequest = state.responseClientRequest;
           if (responseClientRequest is Succes) {
-            // TODO: implement
+           print('created desde mapbookinginfoPage');
             _messageSanckToastSucces(context);
           }
         },
         child: BlocBuilder<ClientMapBookingInfoBloc, ClientMapBookingInfoState>(
+          
           builder: (context, state) {
             final responseTimeAndDistance = state.responseTimeAndDistance;
 
@@ -82,6 +90,7 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
             } else if (responseTimeAndDistance is Succes) {
               TimeAndDistanceValues timeAndDistanceValues =
                   responseTimeAndDistance.data as TimeAndDistanceValues;
+              print('created desde mapbookinginfoPage TimeAndDistanceValues');
               return ClientMapBookingInfoContent(
                 state: state,
                 timeAndDistanceValues: timeAndDistanceValues,
@@ -96,13 +105,16 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
   }
   Widget _messageSanckToastSucces(BuildContext context){
       const snack =  SnackBar(
+        // key: Key('snackBar'),
         elevation: 0,
-        behavior: SnackBarBehavior.floating,
+        behavior: SnackBarBehavior.fixed,
         backgroundColor: Colors.transparent,
         content: AwesomeSnackbarContent(
         title: 'CREATED!',
         message:' Solicitud Creada!!',
         contentType: ContentType.success,
+        color:  Color.fromARGB(255, 243, 159, 90),
+       
        
       ),
   );

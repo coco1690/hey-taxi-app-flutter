@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:hey_taxi_app/src/data/api/api_config.dart';
 import 'package:hey_taxi_app/src/domain/models/client_request.dart';
+import 'package:hey_taxi_app/src/domain/models/client_request_response.dart';
 import 'package:hey_taxi_app/src/domain/models/time_and_distance_values.dart';
 import 'package:hey_taxi_app/src/domain/utils/list_to_string.dart';
 import 'package:hey_taxi_app/src/domain/utils/resource.dart';
@@ -29,11 +30,12 @@ class ClientRequestService {
      
 
     } catch(e){
-      print('Error en catch auth_service: $e');
+      print('Error en catch ClientRequestService getTimeAndDistanceClientRequest : $e');
 
       return ErrorData( e.toString());// viene de utils resource
     }
   }
+
 
   Future<Resource<bool>> create(ClientRequest clientRequest) async {
     try{  
@@ -54,10 +56,38 @@ class ClientRequestService {
       }
      
     } catch(e){
-      print('Error en client request service: $e');
+      print('Error en client request service Create: $e');
       return ErrorData( e.toString());// viene de utils resource
     }
 
+  }
+
+
+  //OBTENER SOLICITUD DE VIAJE DE LOS CLIENTES
+  Future<Resource<List<ClientRequestResponse>>> getNearbyTripRequest(double driverLat, double driverLng) async {
+    
+     try{  
+      Uri url = Uri.http( ApiConfig.API_HEY_TAXI, '/api/v1/client-requests/$driverLat/$driverLng');
+      Map< String, String > headers = { 'Content-Type': 'application/json'};
+      final response = await http.get(url, headers: headers);
+      final data = json.decode(response.body);
+
+      if( response.statusCode == 200 || response.statusCode == 201 ){
+        
+        // EL FROMJSONLIST SE CONFIGUARA PARA TRANSFORMAR LA LISTA DE CLIENTSREQUESTRESPONSE EN EL MODEL
+        List<ClientRequestResponse> listClientRequestResponses = ClientRequestResponse.fromJsonList(data); // LISTA DE CLIENTSREQUESTRESPONSE SE TRANSFORMA EN EL MODEL
+         return Succes( listClientRequestResponses); // viene de utils resource
+
+      } else {
+         return ErrorData( listToString(data['message']) );
+      }
+     
+
+    } catch(e){
+      print('Error en catch ClientRequestService getNearbyTripRequest: $e');
+
+      return ErrorData( e.toString());// viene de utils resource
+    }
   }
 }
 

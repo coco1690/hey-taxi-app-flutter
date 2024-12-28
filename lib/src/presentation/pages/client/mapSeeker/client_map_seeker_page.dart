@@ -41,11 +41,11 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
     // Inicializar el mapa y buscar posición actual
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _bloc.add(ClientMapSeekerInitEvent());
+      _bloc.add(FindMyPosition());
       _bloc.add(ListenDriversPositionSocketIo());
       _bloc.add(ListenDriverDisconnectedSocketIo());
       _bloc.add(ConnectSocketIo());
       print('CLIENT MAP SEEKER CONECTADO');
-      _bloc.add(FindMyPosition());
        rootBundle.loadString('assets/img/style_map.json').then((style) {
       setState(() {
         mapStyle = style;

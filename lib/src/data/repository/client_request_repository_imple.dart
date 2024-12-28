@@ -1,6 +1,7 @@
 
 
 import 'package:hey_taxi_app/src/domain/models/client_request.dart';
+import 'package:hey_taxi_app/src/domain/models/client_request_response.dart';
 
 import '../../domain/models/time_and_distance_values.dart';
 import '../../domain/repository/index.dart';
@@ -22,6 +23,13 @@ class ClientRequestRepositoryImple implements ClientRequestRepository {
   @override
   Future<Resource<bool>> create(ClientRequest clientRequest) {
     return clientRequestService.create(clientRequest);
+  }
+
+  //OBTENER SOLICITUD DE VIAJE DE LOS CLIENTES
+  @override
+  Future<Resource<List<ClientRequestResponse>>> getNearbyTripRequest(double driverLat, double driverlng) {
+    return clientRequestService.getNearbyTripRequest(driverLat, driverlng);
+    
   }
 
 } 
