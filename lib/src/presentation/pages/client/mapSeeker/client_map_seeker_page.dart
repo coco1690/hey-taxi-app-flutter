@@ -44,21 +44,22 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
       _bloc.add(FindMyPosition());
       _bloc.add(ListenDriversPositionSocketIo());
       _bloc.add(ListenDriverDisconnectedSocketIo());
-      _bloc.add(ConnectSocketIo());
-      print('CLIENT MAP SEEKER CONECTADO');
-       rootBundle.loadString('assets/img/style_map.json').then((style) {
+      // _bloc.add(ConnectSocketIo());
+      print('CLIENT MAP SEEKER CONECTADO');  
+    });
+  // Cargar estilo del mapa
+     rootBundle.loadString('assets/img/style_map.json').then((style) {
       setState(() {
         mapStyle = style;
       });
-    });
     });
   }
 
   @override
   void dispose() {
 
-    _bloc.add(DisconnectSocketIo());
-    print('CLIENT MAP SEEKER DESCONECTADO');
+    // _bloc.add(DisconnectSocketIo());
+    // print('CLIENT MAP SEEKER DESCONECTADO');
     // Liberar recursos de los FocusNodes
     pickUpFocusNode.dispose();
     destinationFocusNode.dispose();

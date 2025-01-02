@@ -13,7 +13,7 @@ class TimeAndDistanceValues {
     String destinationAddresses;
     String originAddresses;
     Distance distance;
-    Duration duration;
+    Durations duration;
 
     TimeAndDistanceValues({
         required this.recommendedValue,
@@ -28,7 +28,7 @@ class TimeAndDistanceValues {
         destinationAddresses: json["destination_addresses"],
         originAddresses: json["origin_addresses"],
         distance: Distance.fromJson(json["distance"]),
-        duration: Duration.fromJson(json["duration"]),
+        duration: Durations.fromJson(json["duration"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -60,16 +60,16 @@ class Distance {
     };
 }
 
-class Duration {
+class Durations {
     String text;
     double value;
 
-    Duration({
+    Durations({
         required this.text,
         required this.value,
     });
 
-    factory Duration.fromJson(Map<String, dynamic> json) => Duration(
+    factory Durations.fromJson(Map<String, dynamic> json) => Durations(
         text: json["text"],
         value: json["value"]?.toDouble(),
     );

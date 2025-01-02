@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hey_taxi_app/bloc_socketIo/index.dart';
 import 'package:hey_taxi_app/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,16 +31,18 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
  @override
   void initState() {
     _bloc = context.read<DriverHomeBloc>();
-    _bloc.add(ChangeDrawerDriverPage(pageIdex: 0));
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _bloc.add(ChangeDrawerDriverPage(pageIdex: 0));
+    });
+      // context.read<DriverMapLocationBloc>().add(DriverMapLocationInitEvent());
     super.initState();
 
  }
 
-
   List<Widget> pageList = <Widget>[
     const DriverMapLocationPage(),
-    const DriverClientRequestsPage(),
-    const ProfileInfoPage(),
+    const DriverClientRequestsPage(),    
+    const ProfileInfoPage(),    
     const RolesPage()
     ];
   
@@ -120,9 +123,9 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
                   selected: state.pageIdex == 3, 
                   onTap: () {
                     // 1. Desconexión
-                    context.read<DriverMapLocationBloc>().add(StopLocation());
-                    context.read<DriverMapLocationBloc>().add(DisconnectSocketIo());
-                    print('DRIVER DESCONECTADO');
+                    // context.read<DriverMapLocationBloc>().add(StopLocation());
+                    // context.read<DriverMapLocationBloc>().add(DisconnectSocketIo());
+                    // print('DRIVER DESCONECTADO');
                     
                     // 2. Cambiar rol
                     // context.read<AuthUseCases>().setRole('client');
@@ -137,9 +140,9 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
                   title: const Text('Cerrar sesion'),
                   onTap: () {
                      // 1. Desconexión
-                    context.read<DriverMapLocationBloc>().add(StopLocation());
-                    context.read<DriverMapLocationBloc>().add(DisconnectSocketIo());
                     context.read<DriverHomeBloc>().add(Logout() ); // en el .add agregpo los eventos
+                    context.read<DriverMapLocationBloc>().add(StopLocation());
+                    context.read<BlocSocketIO>().add(DisconnectSocketIo());
                     Navigator.pushAndRemoveUntil(
                       context, 
                       MaterialPageRoute(builder: (context) => const MyApp() ), 

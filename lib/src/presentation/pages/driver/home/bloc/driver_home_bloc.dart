@@ -17,9 +17,9 @@ class DriverHomeBloc extends Bloc< DriverHomeEvent, DriverHomeState> {
       emit( state.copyWith( pageIdex: event.pageIdex ) );
     });
 
-    on<DeleteLocationData>((event, emit) async {
-      await driverPositionUseCases.deleteDriverPosition.run(event.idDriver);
-   });
+  //   on<DeleteLocationData>((event, emit) async {
+  //     await driverPositionUseCases.deleteDriverPosition.run(event.idDriver);
+  //  });
 
     on<Logout>((event, emit) async {
       await authUseCases.logout.run();      

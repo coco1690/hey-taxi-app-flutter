@@ -7,10 +7,10 @@
   ChangeDrawerDriverPage({ required this.pageIdex });
  }
 
- class DeleteLocationData extends DriverHomeEvent {
-  final int idDriver;
-  DeleteLocationData({required this.idDriver});
-}
+//  class DeleteLocationData extends DriverHomeEvent {
+//   final int idDriver;
+//   DeleteLocationData({required this.idDriver});
+// }
 
  class Logout extends DriverHomeEvent{}
 

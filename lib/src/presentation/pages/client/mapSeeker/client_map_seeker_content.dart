@@ -64,8 +64,7 @@ class ClientMapSeekerContent extends StatelessWidget {
   Widget _googleMaps(BuildContext context, ClientMapSeekerState state) {
     
     return BlocListener<ClientMapSeekerBloc, ClientMapSeekerState>(
-      listenWhen: (previous, current) =>
-              previous.placemarkData?.address != current.placemarkData?.address,
+      listenWhen: (previous, current) =>previous.placemarkData?.address != current.placemarkData?.address,
       listener: (context, state) {
 
       print('LISTEN WHEN ${state.placemarkData?.address}');
@@ -177,6 +176,7 @@ class ClientMapSeekerContent extends StatelessWidget {
 
                           BlocListener<ClientMapSeekerBloc,
                               ClientMapSeekerState>(
+                            
                             listener: (context, state) {
                               if (state.placemarkData != null) {
                                 pickUpNotifier.value =

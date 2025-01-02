@@ -12,7 +12,7 @@ class ClientMapBookingInfoState extends Equatable {
   final Completer<GoogleMapController>? controller;
   final Position? position;
   final CameraPosition cameraPositionBooking;
-  final LatLng? pickUpPLatLng;
+  final LatLng? pickUpLatlng;
   final LatLng? destinationLatLng;
   final String pickUpDescription;
   final String destinationDescription;
@@ -23,12 +23,13 @@ class ClientMapBookingInfoState extends Equatable {
   final Resource? responseClientRequest;
   final BlocFormItem? fareOfeered;
   final BlocFormItem? detailsLocation;
+  final bool isInitialized;
 
   const ClientMapBookingInfoState({
     this.position,
     this.controller,
     this.cameraPositionBooking = const CameraPosition(target: LatLng(4.1247564,-73.6502597 ), zoom: 14.0),
-    this.pickUpPLatLng,
+    this.pickUpLatlng,
     this.destinationLatLng,
     this.pickUpDescription = '',
     this.destinationDescription = '',
@@ -39,6 +40,7 @@ class ClientMapBookingInfoState extends Equatable {
     this.responseClientRequest,
     this.fareOfeered,
     this.detailsLocation,
+    this.isInitialized = false,
 
   });
 
@@ -46,7 +48,7 @@ class ClientMapBookingInfoState extends Equatable {
     Position? position,
     Completer<GoogleMapController>? controller,
     CameraPosition? cameraPositionBooking,
-    LatLng? pickUpPLatLng,
+    LatLng? pickUpLatlng,
     LatLng? destinationLatLng,
     String? pickUpDescription,
     String? destinationDescription,
@@ -57,6 +59,7 @@ class ClientMapBookingInfoState extends Equatable {
     Resource? responseClientRequest,
     BlocFormItem? fareOfeered,
     BlocFormItem? detailsLocation,
+    bool? isInitialized,
 
     
 
@@ -65,7 +68,7 @@ class ClientMapBookingInfoState extends Equatable {
       position: position ?? this.position,
       controller: controller ?? this.controller,
       cameraPositionBooking: cameraPositionBooking ?? this.cameraPositionBooking,
-      pickUpPLatLng: pickUpPLatLng ?? this.pickUpPLatLng,
+      pickUpLatlng: pickUpLatlng ?? this.pickUpLatlng,
       destinationLatLng: destinationLatLng ?? this.destinationLatLng,
       pickUpDescription: pickUpDescription ?? this.pickUpDescription,
       destinationDescription: destinationDescription ?? this.destinationDescription,
@@ -76,6 +79,7 @@ class ClientMapBookingInfoState extends Equatable {
       responseClientRequest: responseClientRequest ?? this.responseClientRequest,
       fareOfeered: fareOfeered ?? this.fareOfeered,
       detailsLocation: detailsLocation ?? this.detailsLocation,
+      isInitialized: isInitialized ?? this.isInitialized,
 
     );
   }
@@ -87,7 +91,7 @@ class ClientMapBookingInfoState extends Equatable {
     controller, 
     markers, 
     cameraPositionBooking, 
-    pickUpPLatLng, 
+    pickUpLatlng, 
     destinationLatLng, 
     pickUpDescription, 
     destinationDescription, 
@@ -97,6 +101,7 @@ class ClientMapBookingInfoState extends Equatable {
     responseClientRequest,
     fareOfeered,
     detailsLocation,
+    isInitialized,
     ];
 }
 

@@ -4,6 +4,7 @@ import 'package:hey_taxi_app/src/domain/models/auth_response.dart';
 import 'package:hey_taxi_app/src/domain/utils/resource.dart';
 import 'package:hey_taxi_app/src/presentation/pages/auth/login/login_content.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import '../../../../../bloc_socketIo/index.dart';
 import 'bloc/index.dart';
 
 
@@ -40,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                       print('Succes Data in login page: ${response.data}');
                       final authResponseModel = response.data as AuthResponseModel; // casteo la data de response.data
                       context.read<LoginBloc>().add( SaveUserSession ( authResponseModel: authResponseModel ) );
+                      context.read<BlocSocketIO>().add(ConnectSocketIo());
                       if( authResponseModel.user.roles!.length > 1 ) {
                         Navigator.pushNamedAndRemoveUntil(context, 'roles', (route) => false);
                       } else{

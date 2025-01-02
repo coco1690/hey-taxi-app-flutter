@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-
-
-
 import 'bloc/index.dart';
 
 
@@ -41,27 +36,19 @@ class DriverMapLocationContent extends StatelessWidget {
         mapType: MapType.normal,
         initialCameraPosition: state.cameraPosition,
         markers: Set<Marker>.of(state.markers.values),
-        onCameraMove: (CameraPosition cameraPosition) {
-          context
-              .read<DriverMapLocationBloc>();
-             
-        },
+        // onCameraMove: (CameraPosition cameraPosition) {
+        //   context
+        //       .read<DriverMapLocationBloc>();     
+        // },
+         onMapCreated: (GoogleMapController controller) {
+      // Verifica que el controller no sea null
+      if (state.controller != null && !state.controller!.isCompleted) {
+        state.controller!.complete(controller);
+      } else {
+        print('Error: Controller no está inicializado en el estado.');
+      }
+    },
     );
   }
 
-  // Widget _iconMyLocation(
-  //   BuildContext context,
-  // ) {
-  //   return Container(
-  //     margin: const EdgeInsets.only(bottom: 25),
-  //     alignment: Alignment.center,
-  //     child: Image.asset(
-  //       'assets/img/gps-3.png',
-  //       width: 70,
-  //       height: 70,
-  //     ),
-  //   );
-  // }
-
- 
 }

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hey_taxi_app/src/domain/models/time_and_distance_values.dart';
 import 'package:hey_taxi_app/src/domain/utils/resource.dart';
@@ -18,6 +21,8 @@ class MapBookingInfoPage extends StatefulWidget {
 
 class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
   late ClientMapBookingInfoBloc _bloc;
+  StreamSubscription<Position>? positionStreamSubscription;
+  bool _isEventDispatched = false;
   String? mapStyle;
   LatLng? pickUpLatlng;
   LatLng? destinationLatlng;
@@ -26,32 +31,45 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
 
   @override
   void initState() {
-    
+    super.initState();
     _bloc = context.read<ClientMapBookingInfoBloc>();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_isEventDispatched) {
      _bloc.add(ClientMapBookingInfoInitEvent(
-        pickUpPLatLng: pickUpLatlng!,
+        pickUpLatlng: pickUpLatlng!,
         destinationLatLng: destinationLatlng!,
         pickUpDescription: pickUpDescription!,
         destinationDescription: destinationDescription!
       ));
-
+      _isEventDispatched = true;
       _bloc.add(GetTimeAndDistanceValues());
       _bloc.add(AddPolyline());
-      _bloc.add(
-          ChangeMapCameraPositionMapBookingInfo(
+
+      _bloc.add(ChangeMapCameraPositionMapBookingInfo(
               lat: pickUpLatlng!.latitude, 
               lng: pickUpLatlng!.longitude
-          ));
-      rootBundle.loadString('assets/img/style_map.json').then((style) {
+          ));  
+
+      }
+    });
+    
+    // Cargar estilo del mapa
+    rootBundle.loadString('assets/img/style_map.json').then((style) {
         setState(() {
           mapStyle = style;
         });
       });
-    });
-    super.initState();
   }
 
+  @override
+  void dispose() {
+    _bloc.add(ResetStateEvent());
+    print('RESTART EVENTO EN MAPBOOKINGINFO');
+    positionStreamSubscription?.cancel();
+    super.dispose();
+  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -68,29 +86,33 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
     //   );
     // }
     return Scaffold(
+
       body: BlocListener<ClientMapBookingInfoBloc, ClientMapBookingInfoState>(
         listenWhen: (previous, current) => previous.responseClientRequest != current.responseClientRequest,
         listener: (context, state) {
-          
-          final responseClientRequest = state.responseClientRequest;
+        final responseClientRequest = state.responseClientRequest;
+
           if (responseClientRequest is Succes) {
            print('created desde mapbookinginfoPage');
             _messageSanckToastSucces(context);
           }
         },
+
         child: BlocBuilder<ClientMapBookingInfoBloc, ClientMapBookingInfoState>(
-          
+          buildWhen: (previous, current) => previous.responseTimeAndDistance != current.responseTimeAndDistance,
           builder: (context, state) {
-            final responseTimeAndDistance = state.responseTimeAndDistance;
+          final responseTimeAndDistance = state.responseTimeAndDistance;
 
             if (responseTimeAndDistance is Loading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
+
             } else if (responseTimeAndDistance is Succes) {
               TimeAndDistanceValues timeAndDistanceValues =
                   responseTimeAndDistance.data as TimeAndDistanceValues;
               print('created desde mapbookinginfoPage TimeAndDistanceValues');
+
               return ClientMapBookingInfoContent(
                 state: state,
                 timeAndDistanceValues: timeAndDistanceValues,
@@ -98,11 +120,13 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
               );
             }
             return Container();
-          },
+          }, 
         ),
       ),
     );
   }
+
+
   Widget _messageSanckToastSucces(BuildContext context){
       const snack =  SnackBar(
         // key: Key('snackBar'),

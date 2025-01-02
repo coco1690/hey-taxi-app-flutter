@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/bloc_socketIo/index.dart';
 import 'package:hey_taxi_app/src/domain/models/placemark_data.dart';
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/geolocator_usecases.dart';
 import 'package:hey_taxi_app/src/domain/usecase/socket/socket_usecases.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 import 'client_map_seeker_event.dart';
 import 'client_map_seeker_state.dart';
 
@@ -16,7 +16,9 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
     
   GeolocatorUseCases geolocatorUseCases;
   SocketUseCases socketUseCases;
-  ClientMapSeekerBloc(this.geolocatorUseCases, this.socketUseCases) : super(const ClientMapSeekerState()){
+  BlocSocketIO blocSocketIO;
+  
+  ClientMapSeekerBloc(this.geolocatorUseCases, this.blocSocketIO, this.socketUseCases) : super(const ClientMapSeekerState()){
     
 
    on<ClientMapSeekerInitEvent>((event, emit) async {
@@ -132,20 +134,20 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
 
   });
 
-  on<ConnectSocketIo>((event, emit) async {
-    Socket socket = await socketUseCases.connect.run();
-    emit(state.copyWith(socket: socket));
-    add(ListenDriversPositionSocketIo());
-    add(ListenDriverDisconnectedSocketIo());
-   });
+  // on<ConnectSocketIo>((event, emit) async {
+  //   Socket socket = await socketUseCases.connect.run();
+  //   emit(state.copyWith(socket: socket));
+  //   add(ListenDriversPositionSocketIo());
+  //   add(ListenDriverDisconnectedSocketIo());
+  //  });
 
-  on<DisconnectSocketIo>((event, emit) async {
-    Socket socket = await socketUseCases.disconnect.run();
-    emit(state.copyWith( socket: socket ));
-   });
+  // on<DisconnectSocketIo>((event, emit) async {
+  //   Socket socket = await socketUseCases.disconnect.run();
+  //   emit(state.copyWith( socket: socket ));
+  //  });
 
   on<ListenDriversPositionSocketIo>((event, emit) async {
-    state.socket?.on('new_driver_position', (data) {
+   blocSocketIO.state.socket?.on('new_driver_position', (data) {
       print('Recibido datos de posicion del driver');
       print('Id:  ${data['id_socket']}');
       print('Id:  ${data['id']}');
@@ -162,7 +164,7 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
 
    on<ListenDriverDisconnectedSocketIo>((event, emit) async{
      
-     state.socket?.on('driver_disconnected', (data) {
+     blocSocketIO.state.socket?.on('driver_disconnected', (data) {
       print('eliminado datos de posicion del driver');
       print('Id:  ${data['id_socket']}'
       );
@@ -202,7 +204,7 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
     }
    });
    
-  on<ResetExpandSheetEvent>((event, emit) {
+   on<ResetExpandSheetEvent>((event, emit) {
   emit(state.copyWith(shouldExpandSheet: false));
 });
  

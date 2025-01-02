@@ -25,43 +25,91 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
   ClientMapBookingInfoBloc(this.geolocatorUseCases, this.clientRequestUseCases, this.authUseCases) : super(const ClientMapBookingInfoState()){
     
 
-   on<ClientMapBookingInfoInitEvent>((event, emit) async {
-    final Completer<GoogleMapController> controller = Completer<GoogleMapController>(); 
-     emit(
-      state.copyWith(
-        controller: controller,
-        pickUpPLatLng: event.pickUpPLatLng,
-        destinationLatLng: event.destinationLatLng,
-        pickUpDescription: event.pickUpDescription,
-        destinationDescription: event.destinationDescription,
+  //  on<ClientMapBookingInfoInitEvent>((event, emit) async {
+  //   final Completer<GoogleMapController> controller = Completer<GoogleMapController>(); 
+  //    emit(
+  //     state.copyWith(
+  //       controller: controller,
+  //       pickUpLatlng: event.pickUpLatlng,
+  //       destinationLatLng: event.destinationLatLng,
+  //       pickUpDescription: event.pickUpDescription,
+  //       destinationDescription: event.destinationDescription,
       
-      ));
+  //     ));
+  //     BitmapDescriptor pickUpDescriptor = await geolocatorUseCases.createMarker.run('assets/img/pickup.png', 40.0, 40.0);
+  //     BitmapDescriptor destinationDescriptor = await geolocatorUseCases.createMarker.run('assets/img/destination-2.png', 40.0, 40.0);
+  //     Marker markerPickUp = geolocatorUseCases.getMarker.run(
+  //       'pickup', 
+  //       state.pickUpLatlng!.latitude,
+  //       state.pickUpLatlng!.longitude,
+  //       pickUpDescriptor, 
+  //       'Lugar de recogida',
+  //       'Debes esperar a la recogida'
+  //       );
+  //    Marker markerDestination = geolocatorUseCases.getMarker.run(
+  //       'destination', 
+  //       state.destinationLatLng!.latitude,
+  //       state.destinationLatLng!.longitude,
+  //       destinationDescriptor, 
+  //       'Destino',
+  //       'listo llegamos'
+  //       );
+  //       emit(
+  //     state.copyWith(
+  //        markers: {
+  //             markerPickUp.markerId: markerPickUp,
+  //             markerDestination.markerId: markerDestination,
+  //           },
+  //     ));
+  //  });
+
+
+   on<ClientMapBookingInfoInitEvent>((event, emit) async {
+      // Verifica si ya está inicializado
+      // if (state.isInitialized) return;
+
+      final Completer<GoogleMapController> controller = Completer<GoogleMapController>();
+      emit(
+        state.copyWith(
+          controller: controller,
+          pickUpLatlng: event.pickUpLatlng,
+          destinationLatLng: event.destinationLatLng,
+          pickUpDescription: event.pickUpDescription,
+          destinationDescription: event.destinationDescription,
+          // isInitialized: true, // Marca como inicializado
+        )
+      );
+
       BitmapDescriptor pickUpDescriptor = await geolocatorUseCases.createMarker.run('assets/img/pickup.png', 40.0, 40.0);
       BitmapDescriptor destinationDescriptor = await geolocatorUseCases.createMarker.run('assets/img/destination-2.png', 40.0, 40.0);
+
       Marker markerPickUp = geolocatorUseCases.getMarker.run(
-        'pickup', 
-        state.pickUpPLatLng!.latitude,
-        state.pickUpPLatLng!.longitude,
-        pickUpDescriptor, 
+        'pickup',
+        state.pickUpLatlng!.latitude,
+        state.pickUpLatlng!.longitude,
+        pickUpDescriptor,
         'Lugar de recogida',
-        'Debes esperar a la recogida'
-        );
-     Marker markerDestination = geolocatorUseCases.getMarker.run(
-        'destination', 
+        'Debes esperar a la recogida',
+      );
+
+      Marker markerDestination = geolocatorUseCases.getMarker.run(
+        'destination',
         state.destinationLatLng!.latitude,
         state.destinationLatLng!.longitude,
-        destinationDescriptor, 
+        destinationDescriptor,
         'Destino',
-        'listo llegamos'
-        );
-        emit(
-      state.copyWith(
-         markers: {
-              markerPickUp.markerId: markerPickUp,
-              markerDestination.markerId: markerDestination,
-            },
-      ));
-   });
+        'listo llegamos',
+      );
+
+      emit(
+        state.copyWith(
+          markers: {
+            markerPickUp.markerId: markerPickUp,
+            markerDestination.markerId: markerDestination,
+          },
+        )
+      );
+    });
 
    on<FindMyPositionMapBookingInfo>((event, emit) async {
       Position position = await geolocatorUseCases.findMyPosition.run();
@@ -74,23 +122,48 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
     });
 
    on<ChangeMapCameraPositionMapBookingInfo>((event, emit) async {
-  try {
-    GoogleMapController googleMapController = await state.controller!.future;
-    final newCameraPosition = CameraPosition(
-      target: LatLng(event.lat, event.lng),
-      zoom: 14,
-      bearing: 0,
-    );
-    await googleMapController.animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
-    emit(state.copyWith(cameraPositionBooking: newCameraPosition));
-  } catch (e) {
-    print('ERROR EN ChangeMapCameraPosition: $e');
-  }
-});
+     try {
+      if (state.controller != null && !state.controller!.isCompleted) {
+        GoogleMapController googleMapController = await state.controller!.future;
+        final newCameraPosition = CameraPosition(
+          target: LatLng(event.lat, event.lng),
+          zoom: 14,
+          bearing: 0,
+        );
+        await googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(newCameraPosition),
+        );
+        emit(state.copyWith(cameraPositionBooking: newCameraPosition));
+      }
+    } catch (e) {
+      print('ERROR EN ChangeMapCameraPosition: $e');
+    }
+  });
+
+
+//    on<ChangeMapCameraPositionMapBookingInfo>((event, emit) async {
+//   try {
+//     GoogleMapController googleMapController = await state.controller!.future;
+//     final newCameraPosition = CameraPosition(
+//       target: LatLng(event.lat, event.lng),
+//       zoom: 14,
+//       bearing: 0,
+//     );
+//     await googleMapController.animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
+//     emit(state.copyWith(cameraPositionBooking: newCameraPosition));
+//   } catch (e) {
+//     print('ERROR EN ChangeMapCameraPosition: $e');
+//   }
+// });
+
 
    on<AddPolyline>((event, emit) async {
-    List<LatLng> polylineCoordinates = await geolocatorUseCases.getPolyline.run(state.pickUpPLatLng!, state.destinationLatLng!);
-    PolylineId id = PolylineId("myroute");
+    List<LatLng> polylineCoordinates = await geolocatorUseCases.getPolyline.run(
+      state.pickUpLatlng!, 
+      state.destinationLatLng!
+    );
+    
+    PolylineId id = const PolylineId("myroute");
     Polyline polyline = Polyline(
       polylineId: id, 
       color: const Color.fromARGB(255, 243, 159, 90,),
@@ -101,6 +174,7 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
     emit(
       state.copyWith(
         polylines: {
+          ...state.polylines,
           id:polyline
         }
       )
@@ -116,13 +190,14 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
     });
    
    on<GetTimeAndDistanceValues>((event, emit) async {
+    
     emit(
       state.copyWith(
         responseTimeAndDistance: Loading()
         ));
     Resource<TimeAndDistanceValues> timeAndDistanceValues = await clientRequestUseCases.getTimeAndDistanceClientRequest.run(
-      state.pickUpPLatLng!.latitude, 
-      state.pickUpPLatLng!.longitude, 
+      state.pickUpLatlng!.latitude, 
+      state.pickUpLatlng!.longitude, 
       state.destinationLatLng!.latitude, 
       state.destinationLatLng!.longitude
     );
@@ -130,6 +205,7 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
       state.copyWith(
         responseTimeAndDistance: timeAndDistanceValues
         ));
+      
     });
 
    on<CreateClientRequest>((event, emit) async {
@@ -141,12 +217,12 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
           // detailsLocation: state.detailsLocation?.value ?? '',
           pickupDescription: state.pickUpDescription,
           destinationDescription: state.destinationDescription,
-          pickupLat: state.pickUpPLatLng!.latitude,
-          pickupLng: state.pickUpPLatLng!.longitude,
+          pickupLat: state.pickUpLatlng!.latitude,
+          pickupLng: state.pickUpLatlng!.longitude,
           destinationLat: state.destinationLatLng!.latitude,
           destinationLng: state.destinationLatLng!.longitude,
         ));
-        emit(
+        emit( 
           state.copyWith(
             responseClientRequest: response
           ));
@@ -171,8 +247,40 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
         
         ));
     });
+   
+   // Reinicia el estado
+   on<ResetStateEvent>((event, emit) async {
+    emit(const ClientMapBookingInfoState()); // Reinicia el estado
+  });
+  
+   // Centrar el mapa en la ubicación del usuario
+   on<CenterMapOnUserLocation>((event, emit) async {
+      try {
+        // Si no hay una posición actual, intenta obtenerla
+        if (state.position == null) {
+  
+          Position position = await geolocatorUseCases.findMyPosition.run();
+          emit(state.copyWith(position: position));
+        }
 
+        // Obtén la posición actual del estado
+        final position = state.position;
+        if (position == null) {
+          print('No se pudo obtener la posición actual del usuario DESDE MAPBOOKINGINFOBLOC');
+          return;
+        }
 
+        // Anima la cámara para centrar el mapa en la posición actual
+        GoogleMapController controller = await state.controller!.future;
+        final newCameraPosition = CameraPosition(
+          target: LatLng(position.latitude, position.longitude),
+          zoom: 14.0, // Ajusta el nivel de zoom según sea necesario
+        );
+        await controller.animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
+      } catch (e) {
+        print('Error al centrar el mapa desde MapBookingInfoBloc: $e');
+      }
+    });
 
   }
  

@@ -47,9 +47,9 @@ class OnFocusTextField extends ClientMapSeekerEvent {}
 
 class ResetExpandSheetEvent extends ClientMapSeekerEvent {}
 
-class ConnectSocketIo extends ClientMapSeekerEvent {}
+// class ConnectSocketIo extends ClientMapSeekerEvent {}
 
-class DisconnectSocketIo extends ClientMapSeekerEvent {}
+// class DisconnectSocketIo extends ClientMapSeekerEvent {}
 
 class ListenDriversPositionSocketIo extends ClientMapSeekerEvent {}
 

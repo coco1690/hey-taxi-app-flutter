@@ -4,13 +4,13 @@ import 'package:hey_taxi_app/src/presentation/utils/bloc_form_item.dart';
 abstract class ClientMapBookingInfoEvent {}
 
 class ClientMapBookingInfoInitEvent extends ClientMapBookingInfoEvent{
-  final LatLng pickUpPLatLng;
+  final LatLng pickUpLatlng;
   final LatLng destinationLatLng;
   final String pickUpDescription;
   final String destinationDescription;
 
   ClientMapBookingInfoInitEvent({
-    required this.pickUpPLatLng,
+    required this.pickUpLatlng,
     required this.destinationLatLng,
     required this.pickUpDescription,
     required this.destinationDescription,
@@ -46,6 +46,11 @@ class DetailsLocationOnChanged extends ClientMapBookingInfoEvent {
   final BlocFormItem? detailsLocation;
   DetailsLocationOnChanged({required this.detailsLocation});
 }
+ 
+ // Reinicia el estado
+class ResetStateEvent extends ClientMapBookingInfoEvent {}
 
+// Centrar el mapa en la ubicación del usuario
+class CenterMapOnUserLocation extends ClientMapBookingInfoEvent {}
 
 

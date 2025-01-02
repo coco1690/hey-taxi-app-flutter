@@ -2,13 +2,14 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/bloc_socketIo/index.dart';
 import 'package:hey_taxi_app/src/domain/models/auth_response.dart';
 import 'package:hey_taxi_app/src/domain/models/driver_position.dart';
 import 'package:hey_taxi_app/src/domain/usecase/auth/index.dart';
 import 'package:hey_taxi_app/src/domain/usecase/driver_position/index.dart';
 import 'package:hey_taxi_app/src/domain/usecase/geolocator/geolocator_usecases.dart';
 import 'package:hey_taxi_app/src/domain/usecase/socket/socket_usecases.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+
 
 
 import 'index.dart';
@@ -20,8 +21,10 @@ class DriverMapLocationBloc extends Bloc<DriverMapLocationEvent, DriverMapLocati
   AuthUseCases authUseCases;
   DriverPositionUseCases driverPositionUseCases;
   StreamSubscription<Position>? positionStreamSubscription;
+  BlocSocketIO blocSocketIO;
+  
 
-  DriverMapLocationBloc( this.geolocatorUseCases, this.socketUseCases, this.authUseCases, this.driverPositionUseCases ) : super(const DriverMapLocationState()){
+  DriverMapLocationBloc( this.geolocatorUseCases, this.blocSocketIO, this.socketUseCases, this.authUseCases, this.driverPositionUseCases ) : super(const DriverMapLocationState()){
     
 
    on<DriverMapLocationInitEvent>((event, emit) async {
@@ -32,34 +35,32 @@ class DriverMapLocationBloc extends Bloc<DriverMapLocationEvent, DriverMapLocati
         controller: controller,
         idDriver: authResponseModel.user.id,
       ));
+      print('Controller inicializado en DriverMapLocationInitEvent');
    });
 
    on<FindMyPosition>((event, emit) async {
-  
-     Position position = await geolocatorUseCases.findMyPosition.run();
-     add(ChangeMapCameraPosition(lat: position.latitude, lng: position.longitude));
+  // Cancela cualquier suscripción activa antes de iniciar una nueva
+  positionStreamSubscription?.cancel();
 
-     add(AddMyPositionMarker(lat: position.latitude, lng: position.longitude));
+  Position position = await geolocatorUseCases.findMyPosition.run();
+  add(ChangeMapCameraPosition(lat: position.latitude, lng: position.longitude));
+  add(AddMyPositionMarker(lat: position.latitude, lng: position.longitude));
 
-     Stream<Position> positionStream =  geolocatorUseCases.getPositionStream.run();
-     positionStreamSubscription =  positionStream.listen((Position position){
-      
-        add(UpdateLocation(position: position));
-        add(SaveLocationData(
-          driverPosition: DriverPosition( 
-            idDriver: state.idDriver,
-            lat: position.latitude, 
-            lng: position.longitude 
-        )));
-      });
-        emit(
-          state.copyWith(
-            position: position, 
-          )
-        );
-      
-    print('Desde el DriverMapLocationBloc: ${position.latitude}, ${position.longitude}');
+  Stream<Position> positionStream = geolocatorUseCases.getPositionStream.run();
+  positionStreamSubscription = positionStream.listen((Position position) {
+    add(UpdateLocation(position: position));
+    add(SaveLocationData(
+      driverPosition: DriverPosition(
+        idDriver: state.idDriver,
+        lat: position.latitude,
+        lng: position.longitude,
+      ),
+    ));
   });
+
+  emit(state.copyWith(position: position));
+  print('Desde el DriverMapLocationBloc: ${position.latitude}, ${position.longitude}');
+});
 
    on<AddMyPositionMarker>((event, emit) async {
     BitmapDescriptor imageMarker = await geolocatorUseCases.createMarker.run('assets/img/driver_pin.png', 40.0, 40.0);
@@ -102,6 +103,17 @@ class DriverMapLocationBloc extends Bloc<DriverMapLocationEvent, DriverMapLocati
       ));
   });
   
+  //   on<UpdateLocation>((event, emit) async {
+  //   if (state.position?.latitude != event.position.latitude ||
+  //     state.position?.longitude != event.position.longitude) {
+  //   print('ACTUALIZACION DE LOCALIZACION LAT: ${event.position.latitude} LNG: ${event.position.longitude}');
+  //   add(AddMyPositionMarker(lat: event.position.latitude, lng: event.position.longitude));
+  //   add(ChangeMapCameraPosition(lat: event.position.latitude, lng: event.position.longitude));
+  //   emit(state.copyWith(position: event.position));
+  //   add(EmitDriverPositionSoketIo());
+  //  }
+  // });
+
    on<UpdateLocation>((event, emit) async {
     print('ACTUALIZACION DE LOCALIZACION LAT: ${event.position.latitude} LNG: ${event.position.longitude}');
     add(AddMyPositionMarker(lat: event.position.latitude, lng: event.position.longitude));
@@ -127,18 +139,8 @@ class DriverMapLocationBloc extends Bloc<DriverMapLocationEvent, DriverMapLocati
     print('STREAM CANCELADO DESDE DRIVER MAP LOCATION');
   });
 
-   on<ConnectSocketIo>((event, emit) async {
-    Socket socket = await socketUseCases.connect.run();
-    emit(state.copyWith(socket: socket));  
-   });
-
-   on<DisconnectSocketIo>((event, emit) async {
-    Socket socket = await socketUseCases.disconnect.run();
-    emit(state.copyWith( socket: socket ));
-   });
-  
    on<EmitDriverPositionSoketIo>((event, emit) async {
-     state.socket?.emit('change_driver_position', {
+     blocSocketIO.state.socket?.emit('change_driver_position', {
       'id':  state.idDriver,
       'lat': state.position!.latitude,
       'lng': state.position!.longitude,

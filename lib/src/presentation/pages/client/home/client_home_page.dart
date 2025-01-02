@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:hey_taxi_app/bloc_socketIo/index.dart';
 import 'package:hey_taxi_app/main.dart';
 import 'package:hey_taxi_app/src/domain/models/role.dart';
 import 'package:hey_taxi_app/src/domain/models/user.dart';
@@ -135,6 +136,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
                   title: const Text('Cerrar sesion'),
                   onTap: () {
                     context.read<ClientHomeBloc>().add(Logout() ); // en el .add agregpo los eventos
+                    context.read<BlocSocketIO>().add(DisconnectSocketIo());
                     Navigator.pushAndRemoveUntil(
                       context, 
                       MaterialPageRoute(builder: (context) => const MyApp() ), 

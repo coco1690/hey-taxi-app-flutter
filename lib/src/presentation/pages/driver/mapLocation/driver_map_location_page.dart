@@ -13,31 +13,31 @@ class DriverMapLocationPage extends StatefulWidget {
   State<DriverMapLocationPage> createState() => _DriverMapLocationPageState();
 }
 class _DriverMapLocationPageState extends State<DriverMapLocationPage> {
-  String? mapStyle;
-  late DriverMapLocationBloc _bloc;
   
-   @override
+  String? mapStyle;
+  // bool _isInitialized = false;
+  // late DriverMapLocationBloc _bloc;
+  
+
+  @override
   void initState() {
     super.initState();
-    _bloc = context.read<DriverMapLocationBloc>();
-    _bloc.add(DriverMapLocationInitEvent());
-    _bloc.add(ConnectSocketIo());
-    print('DRIVER CONECTADO');
-    _bloc.add(FindMyPosition());
-    print('DRIVER EN POSICION');
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //  if (!_isInitialized) {
+      context.read<DriverMapLocationBloc>().add(DriverMapLocationInitEvent());
+        print('DRIVER CONECTADO');
+      context.read<DriverMapLocationBloc>().add(FindMyPosition());
+      // _isInitialized = true;
+        print('DRIVER EN POSICION');  
+      // } 
+    });
+    // Cargar estilo del mapa
     rootBundle.loadString('assets/img/style_map.json').then((style) {
       setState(() {
         mapStyle = style;
       });
     });
-  }
-
-  @override
-  void dispose() {
-    // _bloc.add(StopLocation());
-    // _bloc.add(DisconnectSocketIo());
-    // print('DRIVER DESCONECTADO');
-    super.dispose();
   }
 
   @override
@@ -50,8 +50,6 @@ class _DriverMapLocationPageState extends State<DriverMapLocationPage> {
       ),
     );
   }
-
-
 
 }
 

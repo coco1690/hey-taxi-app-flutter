@@ -14,12 +14,7 @@ class RolesItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamedAndRemoveUntil(
-          context, 
-          role.route , 
-          (route) => false,
-          arguments: role,
-          );
+        Navigator.pushNamedAndRemoveUntil(context, role.route , (route) => false);
       },
       child: Column(
         children: [
