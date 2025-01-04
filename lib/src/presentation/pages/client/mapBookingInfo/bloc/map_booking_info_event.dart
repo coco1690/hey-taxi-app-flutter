@@ -53,4 +53,7 @@ class ResetStateEvent extends ClientMapBookingInfoEvent {}
 // Centrar el mapa en la ubicación del usuario
 class CenterMapOnUserLocation extends ClientMapBookingInfoEvent {}
 
+// Emite la solicitud de vaije al driver
+class EmitNewClientRequestSocketIO extends ClientMapBookingInfoEvent {}
+
 

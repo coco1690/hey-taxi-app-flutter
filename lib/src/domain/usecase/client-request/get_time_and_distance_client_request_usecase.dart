@@ -7,5 +7,5 @@ class GetTimeAndDistanceClientRequestUseCase {
 
   GetTimeAndDistanceClientRequestUseCase( this.clientRequestRepository );
 
-  run(double originLat, double originLng, double destinationLat, double destinationLng) => clientRequestRepository.getTimeAndDistanceClientRequest(originLat, originLng, destinationLat, destinationLng);
+  run(double originLat, double originLng, double destinationLat, double destinationLng, int recommendedValue) => clientRequestRepository.getTimeAndDistanceClientRequest(originLat, originLng, destinationLat, destinationLng, recommendedValue);
 }

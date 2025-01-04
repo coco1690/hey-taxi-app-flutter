@@ -1,5 +1,3 @@
-import 'package:hey_taxi_app/src/data/dataSource/remote/service/client_request_service.dart';
-import 'package:hey_taxi_app/src/data/repository/client_request_repository_imple.dart';
 import 'package:hey_taxi_app/src/domain/usecase/client-request/create_client_request_usecase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -20,6 +18,7 @@ import '../domain/repository/index.dart';
 import '../domain/usecase/auth/index.dart';
 import '../domain/usecase/client-request/get_nearby_client_request_response_usecase.dart';
 import '../domain/usecase/client-request/index.dart';
+import '../domain/usecase/driver-trip-request/index.dart';
 import '../domain/usecase/driver_position/get_driver_position_usecase.dart';
 import '../domain/usecase/driver_position/index.dart';
 import '../domain/usecase/geolocator/index.dart';
@@ -67,6 +66,9 @@ abstract class AppModule{
   @injectable
   ClientRequestService get clientRequestService => ClientRequestService();
 
+  @injectable
+  DriverTripRequestService get driverTripRequestService => DriverTripRequestService();
+
 
 
   // ############## INSTANCIA DE REPOSITORIOS ##############
@@ -88,6 +90,9 @@ abstract class AppModule{
 
   @injectable
   ClientRequestRepository get clientRequestRepository => ClientRequestRepositoryImple( clientRequestService );
+
+  @injectable
+  DriverTripRequestRepository get driverTripRequestRepository => DriverTripRequestRepositoryImple( driverTripRequestService );
 
 
 
@@ -138,5 +143,10 @@ abstract class AppModule{
       getNearbyClientRequestResponse: GetNearbyClientRequestResponseUsecase(clientRequestRepository),
       getTimeAndDistanceClientRequest: GetTimeAndDistanceClientRequestUseCase(clientRequestRepository),
       createClientRequest: CreateClientRequestUsecase(clientRequestRepository) 
+    );
+
+    @injectable
+    DriverTripRequestUseCases get driverTripRequestUseCases => DriverTripRequestUseCases(
+      createDriverTripRequest: CreateDriverTripRequestUseCase(driverTripRequestRepository),
     );
 }

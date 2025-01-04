@@ -64,7 +64,7 @@ class DriverClientRequestsItem extends StatelessWidget {
         const Text('Tarifa: ',style: TextStyle( color:Color.fromARGB(255, 230, 254, 83), fontSize: 15, fontWeight: FontWeight.bold )),
         Expanded(
           child: Text(
-             clientRequestResponse?.fareOffered ?? '\$ 26.000',
+             clientRequestResponse?.fareOffered?.toString() ?? '\$ 26.000',
              style: const  TextStyle( color:Color.fromARGB(255, 254, 171, 83), fontSize: 15, fontWeight: FontWeight.bold ),
              softWrap: true,
              overflow: TextOverflow.ellipsis,         

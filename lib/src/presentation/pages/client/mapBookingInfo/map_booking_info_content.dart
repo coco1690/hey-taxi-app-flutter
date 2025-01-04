@@ -86,10 +86,10 @@ class ClientMapBookingInfoContent extends StatelessWidget {
       BuildContext context, TimeAndDistanceValues timeAndDistanceValues) {
     String distance = timeAndDistanceValues.distance.text;
     String duration = timeAndDistanceValues.duration.text;
-    double recommendedValue = timeAndDistanceValues.recommendedValue;
+    int? recommendedValue = timeAndDistanceValues.recommendedValue;
 
-    int approximateValue(double recommendedValue) {
-      return recommendedValue.round();
+    int? approximateValue(int? recommendedValue) {
+      return recommendedValue?.round();
     }
     // int    roundedRecomendedValue = recommendedValue.round();
 

@@ -26,11 +26,11 @@ class ClientRequest {
         this.fareOffered,
         this.detailsLocation,
         required this.pickupDescription,
-        required this.destinationDescription,
+        this.destinationDescription,
         required this.pickupLat,
         required this.pickupLng,
-        required this.destinationLat,
-        required this.destinationLng,
+        this.destinationLat,
+        this.destinationLng,
     });
 
     factory ClientRequest.fromJson(Map<String, dynamic> json) => ClientRequest(

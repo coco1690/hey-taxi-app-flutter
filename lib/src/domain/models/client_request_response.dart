@@ -11,8 +11,8 @@ String clientRequestResponsdeToJson(ClientRequestResponse data) => json.encode(d
 class ClientRequestResponse {
     int id;
     int idClient;
-    dynamic fareOffered;
-    dynamic detailsLocation;
+    int? fareOffered;
+    String? detailsLocation;
     String pickupDescription;
     String destinationDescription;
     String status;
@@ -28,15 +28,15 @@ class ClientRequestResponse {
     ClientRequestResponse({
         required this.id,
         required this.idClient,
-        required this.fareOffered,
-        required this.detailsLocation,
+        this.fareOffered,
+        this.detailsLocation,
         required this.pickupDescription,
         required this.destinationDescription,
         required this.status,
         required this.metodPay,
         required this.updatedAt,
         required this.pickupPosition,
-        required this.destinationPosition,
+        this.destinationPosition,
         this.distanceKm,
         required this.timeDifference,
         required this.client,

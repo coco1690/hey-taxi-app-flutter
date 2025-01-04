@@ -21,9 +21,10 @@ class ClientMapBookingInfoState extends Equatable {
   final bool isBottomSheetExpanded;
   final Resource? responseTimeAndDistance;
   final Resource? responseClientRequest;
-  final BlocFormItem? fareOfeered;
+  final BlocFormItem? fareOffered;
   final BlocFormItem? detailsLocation;
   final bool isInitialized;
+  final int? recommendedValue;
 
   const ClientMapBookingInfoState({
     this.position,
@@ -38,9 +39,10 @@ class ClientMapBookingInfoState extends Equatable {
     this.isBottomSheetExpanded = false,
     this.responseTimeAndDistance,
     this.responseClientRequest,
-    this.fareOfeered,
+    this.fareOffered,
     this.detailsLocation,
     this.isInitialized = false,
+    this.recommendedValue,
 
   });
 
@@ -57,9 +59,10 @@ class ClientMapBookingInfoState extends Equatable {
     bool? isBottomSheetExpanded,
     Resource? responseTimeAndDistance,
     Resource? responseClientRequest,
-    BlocFormItem? fareOfeered,
+    BlocFormItem? fareOffered,
     BlocFormItem? detailsLocation,
     bool? isInitialized,
+    int? recommendedValue,
 
     
 
@@ -77,9 +80,10 @@ class ClientMapBookingInfoState extends Equatable {
       isBottomSheetExpanded: isBottomSheetExpanded ?? this.isBottomSheetExpanded,
       responseTimeAndDistance: responseTimeAndDistance ?? this.responseTimeAndDistance,
       responseClientRequest: responseClientRequest ?? this.responseClientRequest,
-      fareOfeered: fareOfeered ?? this.fareOfeered,
+      fareOffered: fareOffered ?? this.fareOffered,
       detailsLocation: detailsLocation ?? this.detailsLocation,
       isInitialized: isInitialized ?? this.isInitialized,
+      recommendedValue: recommendedValue ?? this.recommendedValue,
 
     );
   }
@@ -99,9 +103,10 @@ class ClientMapBookingInfoState extends Equatable {
     isBottomSheetExpanded,
     responseTimeAndDistance,
     responseClientRequest,
-    fareOfeered,
+    fareOffered,
     detailsLocation,
     isInitialized,
+    recommendedValue,
     ];
 }
 

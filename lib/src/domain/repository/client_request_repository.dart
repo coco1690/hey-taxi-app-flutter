@@ -13,6 +13,7 @@ abstract class ClientRequestRepository {
     double originLng,
     double destinationLat,
     double destinationLng,
+    int recommendedValue
     
     );
 

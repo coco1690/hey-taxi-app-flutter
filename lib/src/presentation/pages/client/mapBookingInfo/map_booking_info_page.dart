@@ -93,6 +93,7 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
         final responseClientRequest = state.responseClientRequest;
 
           if (responseClientRequest is Succes) {
+           context.read<ClientMapBookingInfoBloc>().add(EmitNewClientRequestSocketIO());
            print('created desde mapbookinginfoPage');
             _messageSanckToastSucces(context);
           }
@@ -109,8 +110,8 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
               );
 
             } else if (responseTimeAndDistance is Succes) {
-              TimeAndDistanceValues timeAndDistanceValues =
-                  responseTimeAndDistance.data as TimeAndDistanceValues;
+              TimeAndDistanceValues timeAndDistanceValues = responseTimeAndDistance.data as TimeAndDistanceValues;
+
               print('created desde mapbookinginfoPage TimeAndDistanceValues');
 
               return ClientMapBookingInfoContent(

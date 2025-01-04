@@ -15,7 +15,7 @@ class ClientRequestRepositoryImple implements ClientRequestRepository {
   ClientRequestRepositoryImple( this.clientRequestService );
 
   @override
-  Future<Resource<TimeAndDistanceValues>> getTimeAndDistanceClientRequest(double originLat, double originLng, double destinationLat, double destinationLng) {
+  Future<Resource<TimeAndDistanceValues>> getTimeAndDistanceClientRequest(double originLat, double originLng, double destinationLat, double destinationLng, int recommendedValue) {
     
     return clientRequestService.getTimeAndDistanceClientRequest(originLat, originLng, destinationLat, destinationLng);
   }

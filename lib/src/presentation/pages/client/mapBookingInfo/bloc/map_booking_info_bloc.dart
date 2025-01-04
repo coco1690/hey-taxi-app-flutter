@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hey_taxi_app/bloc_socketIo/index.dart';
 import 'package:hey_taxi_app/src/domain/models/auth_response.dart';
 import 'package:hey_taxi_app/src/domain/models/client_request.dart';
 import 'package:hey_taxi_app/src/domain/models/time_and_distance_values.dart';
@@ -21,8 +22,10 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
   GeolocatorUseCases geolocatorUseCases;
   ClientRequestUseCases clientRequestUseCases;
   AuthUseCases authUseCases;
+  BlocSocketIO blocSocketIO;
 
-  ClientMapBookingInfoBloc(this.geolocatorUseCases, this.clientRequestUseCases, this.authUseCases) : super(const ClientMapBookingInfoState()){
+
+  ClientMapBookingInfoBloc(this.geolocatorUseCases, this.blocSocketIO, this.clientRequestUseCases, this.authUseCases,) : super(const ClientMapBookingInfoState()){
     
 
   //  on<ClientMapBookingInfoInitEvent>((event, emit) async {
@@ -199,7 +202,9 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
       state.pickUpLatlng!.latitude, 
       state.pickUpLatlng!.longitude, 
       state.destinationLatLng!.latitude, 
-      state.destinationLatLng!.longitude
+      state.destinationLatLng!.longitude,
+      state.recommendedValue ?? 0
+
     );
     emit(
       state.copyWith(
@@ -208,30 +213,70 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
       
     });
 
-   on<CreateClientRequest>((event, emit) async {
-       AuthResponseModel authResponseModel =await authUseCases.getUserSession.run();
-       Resource<bool> response = await clientRequestUseCases.createClientRequest.run( 
-        ClientRequest(
-          idClient:  authResponseModel.user.id!,
-          // fareOffered: fareOffered,
-          // detailsLocation: state.detailsLocation?.value ?? '',
-          pickupDescription: state.pickUpDescription,
-          destinationDescription: state.destinationDescription,
-          pickupLat: state.pickUpLatlng!.latitude,
-          pickupLng: state.pickUpLatlng!.longitude,
-          destinationLat: state.destinationLatLng!.latitude,
-          destinationLng: state.destinationLatLng!.longitude,
-        ));
-        emit( 
-          state.copyWith(
-            responseClientRequest: response
-          ));
+  // ####################### Crear la solicitud de viaje al driver ###############################
+  on<CreateClientRequest>((event, emit) async {
+  try {
+    AuthResponseModel authResponseModel = await authUseCases.getUserSession.run();
+     Resource<TimeAndDistanceValues> timeAndDistanceResponse = await clientRequestUseCases.getTimeAndDistanceClientRequest.run(
+      state.pickUpLatlng!.latitude,
+      state.pickUpLatlng!.longitude,
+      state.destinationLatLng!.latitude,
+      state.destinationLatLng!.longitude,
+      state.recommendedValue ?? 0, // Valor por defecto
+    );
 
-    });
+    int? recommendedValue = 0;
+
+    if (timeAndDistanceResponse is Succes<TimeAndDistanceValues>) {
+      recommendedValue = timeAndDistanceResponse.data.recommendedValue as int;
+    } else {
+      print('Error obteniendo valores recomendados');
+    }
+    // Validación segura para fareOffered
+     // Validación segura para fareOffered
+    int fareOffered = 0; // Valor por defecto
+    if (state.fareOffered?.value != null && state.fareOffered!.value.isNotEmpty) {
+      fareOffered = int.tryParse(state.fareOffered!.value) ?? recommendedValue;
+    } else {
+      fareOffered = recommendedValue;
+    }
+
+    Resource<bool> response = await clientRequestUseCases.createClientRequest.run(
+      ClientRequest(
+        idClient: authResponseModel.user.id!,
+        fareOffered: fareOffered,
+        detailsLocation: state.detailsLocation?.value ?? '',
+        pickupDescription: state.pickUpDescription,
+        destinationDescription: state.destinationDescription,
+        pickupLat: state.pickUpLatlng!.latitude,
+        pickupLng: state.pickUpLatlng!.longitude,
+        destinationLat: state.destinationLatLng!.latitude,
+        destinationLng: state.destinationLatLng!.longitude,
+      ),
+    );
+
+    emit(
+      state.copyWith(
+        responseClientRequest: response,
+      ),
+    );
+  } catch (error) {
+    print('Error al crear la solicitud: $error');
+    emit(state.copyWith(responseClientRequest: ErrorData('Error al crear la solicitud')));
+  }
+});
+
+    //######################### Emite la solicitud de viaje al driver ###############################
+   on<EmitNewClientRequestSocketIO>((event, emit) async { 
+     blocSocketIO.state.socket?.emit('new_client_request',{
+      'id_client_request': 85
+     });
+   });
+
 
    on<FareOfferedOnChanged>((event, emit) async {
     emit(
-      state.copyWith( fareOfeered: BlocFormItem(
+      state.copyWith( fareOffered: BlocFormItem(
         value: event.fareOfeered?.value == null ? '' : event.fareOfeered?.value ?? '',
         error: event.fareOfeered?.error ?? '',
       ),

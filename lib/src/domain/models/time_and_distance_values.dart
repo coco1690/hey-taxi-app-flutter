@@ -9,14 +9,14 @@ TimeAndDistanceValues timeAndDistanceValuesFromJson(String str) => TimeAndDistan
 String timeAndDistanceValuesToJson(TimeAndDistanceValues data) => json.encode(data.toJson());
 
 class TimeAndDistanceValues {
-    double recommendedValue;
+    int? recommendedValue;
     String destinationAddresses;
     String originAddresses;
     Distance distance;
     Durations duration;
 
     TimeAndDistanceValues({
-        required this.recommendedValue,
+        this.recommendedValue,
         required this.destinationAddresses,
         required this.originAddresses,
         required this.distance,
@@ -24,7 +24,7 @@ class TimeAndDistanceValues {
     });
 
     factory TimeAndDistanceValues.fromJson(Map<String, dynamic> json) => TimeAndDistanceValues(
-        recommendedValue: json["recommended_value"]?.toDouble(),
+        recommendedValue: json["recommended_value"]?.toInt(),
         destinationAddresses: json["destination_addresses"],
         originAddresses: json["origin_addresses"],
         distance: Distance.fromJson(json["distance"]),
