@@ -26,8 +26,9 @@ class _DriverClientRequestsPageState extends State<DriverClientRequestsPage> {
 void initState() {
   super.initState();
   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    context.read<DriverClientRequestsBloc>().add(GetNearbyClientRequest());
+    context.read<DriverClientRequestsBloc>().add(InitDriverClientRequests());
     context.read<DriverClientRequestsBloc>().add(ListenNewClientRequestSocketIO());
+    // context.read<DriverClientRequestsBloc>().add(GetNearbyClientRequest());
   });
 }
 

@@ -232,7 +232,6 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
     } else {
       print('Error obteniendo valores recomendados');
     }
-    // Validación segura para fareOffered
      // Validación segura para fareOffered
     int fareOffered = 0; // Valor por defecto
     if (state.fareOffered?.value != null && state.fareOffered!.value.isNotEmpty) {
@@ -241,7 +240,7 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
       fareOffered = recommendedValue;
     }
 
-    Resource<bool> response = await clientRequestUseCases.createClientRequest.run(
+    Resource<int> response = await clientRequestUseCases.createClientRequest.run(
       ClientRequest(
         idClient: authResponseModel.user.id!,
         fareOffered: fareOffered,
@@ -269,7 +268,7 @@ class ClientMapBookingInfoBloc extends Bloc<ClientMapBookingInfoEvent, ClientMap
     //######################### Emite la solicitud de viaje al driver ###############################
    on<EmitNewClientRequestSocketIO>((event, emit) async { 
      blocSocketIO.state.socket?.emit('new_client_request',{
-      'id_client_request': 85
+      'id_client_request': event.idClientRequest
      });
    });
 

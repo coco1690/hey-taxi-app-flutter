@@ -30,6 +30,7 @@ class SaveLocationData extends DriverMapLocationEvent {
   final DriverPosition driverPosition;
   SaveLocationData({required this.driverPosition});
 }
+
 class DeleteLocationData extends DriverMapLocationEvent {
   final int idDriver;
   DeleteLocationData({required this.idDriver});

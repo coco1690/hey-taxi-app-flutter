@@ -11,7 +11,9 @@ import 'package:hey_taxi_app/src/domain/utils/resource.dart';
 import 'package:http/http.dart' as http;
 
 class ClientRequestService {
+  
 
+  // GET TIEMPO Y DISTANCIA DE UNA SOLICITUD DE VIAJE
   Future<Resource<TimeAndDistanceValues>> getTimeAndDistanceClientRequest(double originLat, double originLng, double destinationLat, double destinationLng) async {
     
      try{  
@@ -37,7 +39,8 @@ class ClientRequestService {
   }
 
 
-  Future<Resource<bool>> create(ClientRequest clientRequest) async {
+  // CREO LA SOLICITUD DE VIAJE
+  Future<Resource<int>> create(ClientRequest clientRequest) async {
     try{  
       Uri url = Uri.http( ApiConfig.API_HEY_TAXI, '/api/v1/client-requests');
       Map< String, String > headers = { 'Content-Type': 'application/json'};
@@ -49,7 +52,7 @@ class ClientRequestService {
       if( response.statusCode == 200 || response.statusCode == 201 ){
         //  ClientRequest clientRequest = ClientRequest.fromJson(data); // transformo la Data a authResponse 
          print( ' Data Remote ClientRequest create: ${ clientRequest.toJson()}');
-         return Succes( true ); // viene de utils resource
+         return Succes( data ); // viene de utils resource
 
       } else {
          return ErrorData( listToString(data['message']) );
@@ -57,6 +60,34 @@ class ClientRequestService {
      
     } catch(e){
       print('Error en client request service Create: $e');
+      return ErrorData( e.toString());// viene de utils resource
+    }
+
+  }
+
+
+  // ACTUALIZAR LA SOLICITUD DE VIAJE PARA QUE SEA ASSIGNADA A UN DRIVER
+  Future<Resource<bool>> updateDriverAssigned(int idClientRequest, int idDriverAssigned, int fareAccepted) async {
+    try{  
+      Uri url = Uri.http( ApiConfig.API_HEY_TAXI, '/api/v1/client-requests');
+      Map< String, String > headers = { 'Content-Type': 'application/json'};
+      String body = json.encode({
+        'id': idClientRequest,
+        'id_driver_assigned': idDriverAssigned,
+        'fare_accepted': fareAccepted
+      });
+      final response = await http.put(url, headers: headers, body: body);
+      final data = json.decode(response.body);
+     
+      if( response.statusCode == 200 || response.statusCode == 201 ){
+         return Succes( true ); // viene de utils resource
+
+      } else {
+         return ErrorData( listToString(data['message']) );
+      }
+     
+    } catch(e){
+      print('Error en client request service updateDriverAssigned: $e');
       return ErrorData( e.toString());// viene de utils resource
     }
 

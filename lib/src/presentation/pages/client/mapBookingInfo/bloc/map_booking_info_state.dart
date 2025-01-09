@@ -79,7 +79,7 @@ class ClientMapBookingInfoState extends Equatable {
       polylines: polylines ?? this.polylines,
       isBottomSheetExpanded: isBottomSheetExpanded ?? this.isBottomSheetExpanded,
       responseTimeAndDistance: responseTimeAndDistance ?? this.responseTimeAndDistance,
-      responseClientRequest: responseClientRequest ?? this.responseClientRequest,
+      responseClientRequest: responseClientRequest,
       fareOffered: fareOffered ?? this.fareOffered,
       detailsLocation: detailsLocation ?? this.detailsLocation,
       isInitialized: isInitialized ?? this.isInitialized,

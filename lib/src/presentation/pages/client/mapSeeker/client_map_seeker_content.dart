@@ -67,7 +67,7 @@ class ClientMapSeekerContent extends StatelessWidget {
       listenWhen: (previous, current) =>previous.placemarkData?.address != current.placemarkData?.address,
       listener: (context, state) {
 
-      print('LISTEN WHEN ${state.placemarkData?.address}');
+      // print('LISTEN WHEN ${state.placemarkData?.address}');
          if (state.placemarkData != null) {                 
       pickUpController.text =  state.placemarkData?.address ?? '';
         context
@@ -85,9 +85,7 @@ class ClientMapSeekerContent extends StatelessWidget {
         initialCameraPosition: state.cameraPosition,
         markers: Set<Marker>.of(state.markers.values),
         onCameraMove: (CameraPosition cameraPosition) {
-          context
-              .read<ClientMapSeekerBloc>()
-              .add(OnCameraMove(cameraPosition: cameraPosition));
+          context.read<ClientMapSeekerBloc>().add(OnCameraMove(cameraPosition: cameraPosition));
         },
         onCameraIdle: () async {
           context.read<ClientMapSeekerBloc>().add(OnCameraIdle());        

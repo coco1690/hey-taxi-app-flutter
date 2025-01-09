@@ -57,10 +57,6 @@ class _ClientMapSeekerPageState extends State<ClientMapSeekerPage> {
 
   @override
   void dispose() {
-
-    // _bloc.add(DisconnectSocketIo());
-    // print('CLIENT MAP SEEKER DESCONECTADO');
-    // Liberar recursos de los FocusNodes
     pickUpFocusNode.dispose();
     destinationFocusNode.dispose();
     super.dispose();

@@ -4,7 +4,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 abstract class ClientMapSeekerEvent {}
 
 class ClientMapSeekerInitEvent extends ClientMapSeekerEvent{}
+
 class FindMyPosition extends ClientMapSeekerEvent {}
+
 class FindMyPositionSelectionMap extends ClientMapSeekerEvent {}
 
 class ChangeMapCameraPosition extends ClientMapSeekerEvent {
@@ -13,6 +15,7 @@ class ChangeMapCameraPosition extends ClientMapSeekerEvent {
 
   ChangeMapCameraPosition({required this.lat, required this.lng});
 }
+
 class OnCameraMove extends ClientMapSeekerEvent {
   final CameraPosition cameraPosition;
   OnCameraMove({required this.cameraPosition});
@@ -60,6 +63,7 @@ class RemoveDriverPositionMarker extends ClientMapSeekerEvent{
 
   RemoveDriverPositionMarker({ required this.idSocket});
 }
+
 class AddDriverPositionMarker extends ClientMapSeekerEvent{
   final String idSocket;
   final int    idDriver;

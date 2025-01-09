@@ -134,21 +134,9 @@ class ClientMapSeekerBloc extends Bloc<ClientMapSeekerEvent, ClientMapSeekerStat
 
   });
 
-  // on<ConnectSocketIo>((event, emit) async {
-  //   Socket socket = await socketUseCases.connect.run();
-  //   emit(state.copyWith(socket: socket));
-  //   add(ListenDriversPositionSocketIo());
-  //   add(ListenDriverDisconnectedSocketIo());
-  //  });
-
-  // on<DisconnectSocketIo>((event, emit) async {
-  //   Socket socket = await socketUseCases.disconnect.run();
-  //   emit(state.copyWith( socket: socket ));
-  //  });
-
   on<ListenDriversPositionSocketIo>((event, emit) async {
    blocSocketIO.state.socket?.on('new_driver_position', (data) {
-      print('Recibido datos de posicion del driver');
+      print('Recibido datos de posicion del driver en client_map_seeker_bloc');
       print('Id:  ${data['id_socket']}');
       print('Id:  ${data['id']}');
       print('Lat: ${data['lat']}');

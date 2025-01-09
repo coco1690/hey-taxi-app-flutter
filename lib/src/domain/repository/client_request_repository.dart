@@ -18,7 +18,14 @@ abstract class ClientRequestRepository {
     );
 
     //CREO SOLICITUD DE VIAJE DESDE CLIENTE
-    Future<Resource<bool>> create( ClientRequest clientRequest);
+    Future<Resource<int>> create( ClientRequest clientRequest);
+
+    //ACTUALIZO LA RESPUESTA DEL CLIENTE Y ASIGNO IN DRIVER Y STATUS ACCEPTED
+    Future<Resource<bool>> updateDriverAssigned( 
+      int idClientRequest,
+      int idDriverAssigned,
+      int fareAccepted
+    );
 
 
     //OBTENER SOLICITUD DE VIAJE DE LOS CLIENTES

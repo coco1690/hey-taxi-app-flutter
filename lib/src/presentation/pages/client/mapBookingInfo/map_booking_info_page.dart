@@ -92,8 +92,11 @@ class _MapBookingInfoPageState extends State<MapBookingInfoPage> {
         listener: (context, state) {
         final responseClientRequest = state.responseClientRequest;
 
-          if (responseClientRequest is Succes) {
-           context.read<ClientMapBookingInfoBloc>().add(EmitNewClientRequestSocketIO());
+         if (responseClientRequest is Succes) {
+           int idClientRequest = responseClientRequest.data;
+           print('ID CLIENT REQUEST desde mapbookinginfoPage Succes: $idClientRequest');
+           // Emite la solicitud de viaje al driver
+           context.read<ClientMapBookingInfoBloc>().add(EmitNewClientRequestSocketIO( idClientRequest: idClientRequest));
            print('created desde mapbookinginfoPage');
             _messageSanckToastSucces(context);
           }

@@ -54,6 +54,9 @@ class ResetStateEvent extends ClientMapBookingInfoEvent {}
 class CenterMapOnUserLocation extends ClientMapBookingInfoEvent {}
 
 // Emite la solicitud de vaije al driver
-class EmitNewClientRequestSocketIO extends ClientMapBookingInfoEvent {}
+class EmitNewClientRequestSocketIO extends ClientMapBookingInfoEvent {
+  final int idClientRequest;
+  EmitNewClientRequestSocketIO({required this.idClientRequest});
+}
 
 

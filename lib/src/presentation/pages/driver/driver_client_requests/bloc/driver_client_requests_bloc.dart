@@ -24,25 +24,34 @@ class DriverClientRequestsBloc extends Bloc<DriverClientRequestsEvent, DriverCli
 
   DriverClientRequestsBloc( this.clientRequestUseCases, this.blocSocketIO, this.driverPositionUseCases, this.authUseCases, this.driverTripRequestUseCases ) : super(const DriverClientRequestsState()){
 
-    on<GetNearbyClientRequest>((event, emit) async {
+
+    on<InitDriverClientRequests>((event, emit) async {
       AuthResponseModel authResponseModel = await authUseCases.getUserSession.run();// OBTENGO LA ID DEL DRIVER
-      Resource driverPositionResponse = await driverPositionUseCases.getDriverPosition.run(authResponseModel.user.id!);
+      Resource responseDriverPosition = await driverPositionUseCases.getDriverPosition.run(authResponseModel.user.id!);
 
-      emit(state.copyWith(response: Loading()));
+      emit(state.copyWith(
+        response: Loading(),
+        idDriver: authResponseModel.user.id,
+        responseDriverPosition: responseDriverPosition
+        ));
+      add(GetNearbyClientRequest());
+    });
 
-      if( driverPositionResponse is Succes ){
-        DriverPosition driverPosition = driverPositionResponse.data as DriverPosition;
+    on<GetNearbyClientRequest>((event, emit) async {
+      final responseDriverPosition = state.responseDriverPosition;
+      if( responseDriverPosition is Succes ){
+        DriverPosition driverPosition = responseDriverPosition.data as DriverPosition;
         Resource<List<ClientRequestResponse>> response = await clientRequestUseCases.getNearbyClientRequestResponse.run(driverPosition.lat, driverPosition.lng);
         
         if (response is Succes<List<ClientRequestResponse>>) {
         if (response.data.isEmpty) {
-         print('La lista de ClientRequestResponse está vacía');
+          print('La lista de ClientRequestResponse está vacía');
         } else {
         for (var req in response.data) {
         print('ClientRequest: id=${req.id}, status=${req.status}');
+       }
       }
-   }
-}
+     }
         emit(state.copyWith(response: response));
       }
       
@@ -55,13 +64,10 @@ class DriverClientRequestsBloc extends Bloc<DriverClientRequestsEvent, DriverCli
       
     });
 
-
     //######################### Escucha los cambio de las solicitudes de los clientes ###############################
     on<ListenNewClientRequestSocketIO>((event, emit) async {
       if ( blocSocketIO.state.socket != null ){
       blocSocketIO.state.socket?.on('created_client_request', (data) {
-        print('Recibido evento new_client_request desde driverClientRequestsBloc');
-        print(data);
         add(GetNearbyClientRequest());
       });
       } else {

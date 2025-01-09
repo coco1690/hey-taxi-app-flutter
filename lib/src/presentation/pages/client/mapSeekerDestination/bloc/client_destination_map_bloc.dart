@@ -66,7 +66,7 @@ class ClientDestinationMapBloc extends Bloc<ClientDestinationMapEvent, ClientDes
     await googleMapController.animateCamera(CameraUpdate.newCameraPosition(newCameraPosition));
     emit(state.copyWith(cameraPositionDestination: newCameraPosition));
   } catch (e) {
-    print('ERROR EN ChangeMapCameraPosition: $e');
+    print('ERROR EN ChangeMapCameraPosition en client_detination_bloc: $e');
   }
 });
 

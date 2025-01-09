@@ -123,7 +123,7 @@ class DriverClientRequestsItem extends StatelessWidget {
     return Row(
       children: [
         const Icon(Icons.timer_outlined, color:Color.fromARGB(255, 230, 254, 83)),
-        const Text(' Tiempo: ',style: TextStyle( color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold )),
+        const Text(' Tiem. de llegada : ',style: TextStyle( color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold )),
         Expanded(
           child: Text(
              clientRequestResponse?.googleDistanceMatrix.duration.text ?? '',
@@ -140,7 +140,7 @@ class DriverClientRequestsItem extends StatelessWidget {
     return Row(
       children: [
         const Icon(Icons.social_distance_rounded, color:Color.fromARGB(255, 230, 254, 83)),
-        const Text(' Distancia: ',style: TextStyle( color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold )),
+        const Text(' Distancia : ',style: TextStyle( color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold )),
         Expanded(
           child: Text(
              clientRequestResponse?.googleDistanceMatrix.distance.text ?? '',

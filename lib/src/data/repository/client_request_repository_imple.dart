@@ -21,8 +21,13 @@ class ClientRequestRepositoryImple implements ClientRequestRepository {
   }
 
   @override
-  Future<Resource<bool>> create(ClientRequest clientRequest) {
+  Future<Resource<int>> create(ClientRequest clientRequest) {
     return clientRequestService.create(clientRequest);
+  }
+
+  @override
+  Future<Resource<bool>> updateDriverAssigned(int id, int idDriverAssigned, int fareAccepted) {
+    return clientRequestService.updateDriverAssigned(id, idDriverAssigned, fareAccepted);
   }
 
   //OBTENER SOLICITUD DE VIAJE DE LOS CLIENTES
